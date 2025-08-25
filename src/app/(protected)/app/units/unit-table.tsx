@@ -1,11 +1,10 @@
 // src/app/(protected)/app/units/unit-table.tsx
 "use client";
-import { Skeleton } from '@heroui/react';
+import { Button, Skeleton } from '@heroui/react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -86,16 +85,20 @@ export function UnitTable({
                             <TableCell className="flex space-x-2">
                                 <Button
                                     variant="ghost"
-                                    size="icon"
-                                    onClick={() => onEdit(unit)}
+                                    isIconOnly
+                                    aria-label='Edit Unit' // Accessibility label
+                                    onPress={() => onEdit(unit)}
                                 >
                                     <PencilIcon className="h-4 w-4" />
                                 </Button>
                                 <Button
                                     variant="ghost"
-                                    size="icon"
-                                    onClick={() => onDelete(unit.id)}
+                                    isIconOnly
+                                    aria-label='Delete Unit' // Accessibility label
+                                    onPress={() => onDelete(unit.id)}
                                     disabled={isDeleting}
+                                    className={`${isDeleting ? "opacity-50 cursor-not-allowed" : ""
+                                        }`}
                                 >
                                     <TrashIcon className="h-4 w-4 text-red-500" />
                                 </Button>

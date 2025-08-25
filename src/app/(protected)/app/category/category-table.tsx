@@ -1,17 +1,16 @@
 // src/app/(protected)/app/category/category-table.tsx
 "use client";
-import { Skeleton } from '@heroui/react';
+import { Button, Skeleton } from '@heroui/react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
     TableCell,
     TableHead,
-    TableHeader, 
+    TableHeader,
     TableRow,
 } from '@/components/ui/table';
 import { ReadCategoryInput } from '@/zap/schemas/category.schema';
@@ -84,16 +83,21 @@ export function CategoryTable({
                             <TableCell className="flex space-x-2">
                                 <Button
                                     variant="ghost"
-                                    size="icon"
-                                    onClick={() => onEdit(category)}
+                                    isIconOnly
+                                    onPress={() => onEdit(category)}
+                                    aria-label='Edit Category' // Accessibility label
                                 >
                                     <PencilIcon className="h-4 w-4" />
                                 </Button>
                                 <Button
+                                    className={`${
+                                        isDeleting ? "opacity-50 cursor-not-allowed" : ""
+                                    }`}
                                     variant="ghost"
-                                    size="icon"
-                                    onClick={() => onDelete(category.id)}
+                                    isIconOnly
+                                    onPress={() => onDelete(category.id)}
                                     disabled={isDeleting}
+                                    aria-label='Delete Category' // Accessibility label
                                 >
                                     <TrashIcon className="h-4 w-4 text-red-500" />
                                 </Button>

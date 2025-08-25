@@ -1,11 +1,10 @@
 // src/app/(protected)/app/orders/orders-table.tsx
 "use client";
-import { Skeleton } from '@heroui/react';
+import { Button, Skeleton } from '@heroui/react';
 import { PrinterIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -92,17 +91,21 @@ export function OrdersTable({
 
                             <TableCell className="flex space-x-2">
                                 <Button
+                                    isIconOnly
                                     variant="ghost"
-                                    size="icon"
-                                    onClick={() => onPrint(order)}
+                                    onPress={() => onPrint(order)}
+                                    aria-label='Print Order' // Accessibility label
                                 >
                                     <PrinterIcon className="h-4 w-4" />
                                 </Button>
                                 <Button
                                     variant="ghost"
-                                    size="icon"
-                                    onClick={() => onDelete(order.id)}
+                                    isIconOnly
+                                    aria-label='Delete Order' // Accessibility label
+                                    onPress={() => onDelete(order.id)}
                                     disabled={isDeleting}
+                                    className={`${isDeleting ? "opacity-50 cursor-not-allowed" : ""
+                                        }`}
                                 >
                                     <TrashIcon className="h-4 w-4 text-red-500" />
                                 </Button>
