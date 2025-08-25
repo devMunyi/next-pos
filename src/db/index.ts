@@ -11,8 +11,6 @@
 // export const db = drizzle({ client: sql, schema });
 
 
-// import "server-only";
-
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
@@ -33,7 +31,13 @@ const pool = new Pool({
 export const db = drizzle(pool, { schema });
 
 // Optional: Handle graceful shutdown
-process.on('SIGINT', async () => {
+// Graceful shutdown - Ensure single SIGINT listener
+const cleanup = async () => {
     await pool.end();
     process.exit(0);
-});
+};
+
+// Check if already attached
+if (!process.listeners('SIGINT').includes(cleanup)) {
+    process.once('SIGINT', cleanup);  // Use 'once' to automatically remove after execution
+}

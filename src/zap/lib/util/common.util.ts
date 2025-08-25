@@ -297,7 +297,3 @@ export const formatCurrency2 = (value: string) => {
         maximumFractionDigits: 2
     }).format(Number(value));
 };
-
-// const formatter = new Intl.RelativeTimeFormat('en', {
-//     numeric: 'auto'
-// });
