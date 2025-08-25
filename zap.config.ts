@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 import { DEV, ENV } from "@/lib/env.client";
 import type { ZapSettings } from "@/zap/types/zap.config.types";
 
-export const APP_NAME = "Zap.ts";
+export const APP_NAME = "APA SHOP";
 export const APP_DESCRIPTION = "Build application as fast as a zap.";
 export const BASE_URL = DEV
   ? "http://localhost:3000"
