@@ -13,10 +13,10 @@ import type { ZapSettings } from "@/zap/types/zap.config.types";
 
 export const APP_NAME = "Zap.ts";
 export const APP_DESCRIPTION = "Build application as fast as a zap.";
-// export const BASE_URL = DEV
-//   ? "http://localhost:3000"
-//   : "https://demo.zap-ts.alexandretrotel.org";
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = DEV
+  ? "http://localhost:3000"
+  : "https://next-pos-delta.vercel.app";
+// export const BASE_URL = "http://localhost:3000";
 export type Provider = "apple" | "google";
 
 export const ZAP_DEFAULT_SETTINGS: ZapSettings = {

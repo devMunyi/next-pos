@@ -23,6 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -154,8 +155,15 @@ export function SidebarUser({ user }: SidebarUserProps) {
                 { label: "Log out", icon: LogOut, onClick: handleSignOut },
               ])}
             </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup className="px-2">
+              <ModeToggle variant={"outline"} /> Appearance
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+      </SidebarMenuItem>
+
+      <SidebarMenuItem>
       </SidebarMenuItem>
     </SidebarMenu>
   );

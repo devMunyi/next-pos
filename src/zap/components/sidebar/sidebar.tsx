@@ -1,6 +1,6 @@
 "use client";
 
-import { ArchiveIcon, ChartLineIcon,Home, ListTreeIcon, ScaleIcon, ShoppingCartIcon, UsersIcon } from "lucide-react";
+import { ArchiveIcon, ChartLineIcon, Home, ListTreeIcon, ScaleIcon, ShoppingCartIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import type * as React from "react";
 
@@ -94,6 +94,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar> & {
       </SidebarContent>
 
       <SidebarFooter>
+        {/* <ModeToggle variant={"outline"} /> */}
         <SidebarUser user={userData} />
       </SidebarFooter>
     </Sidebar>
