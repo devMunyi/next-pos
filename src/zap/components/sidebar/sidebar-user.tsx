@@ -70,8 +70,14 @@ export function SidebarUser({ user }: SidebarUserProps) {
   const fallback = getInitials(user.name);
 
   const handleSignOut = async () => {
+    //  better-auth.session_token
     await Effect.tryPromise({
-      try: () => authClient.signOut(),
+      try: () => {
+        // delete (window as any).__session_token; // for better-auth
+        // get rid of cookie key better-auth.session_token
+        document.cookie = "better-auth.session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        return authClient.signOut();
+      },
       catch: () => ({ error: true }),
     })
       .pipe(
