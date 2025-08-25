@@ -82,11 +82,9 @@ export function useProduct() {
                 const result = await client.products.createProduct(arg);
 
                 if (result.success) {
-                    toast.success(result.message || "Product added successfully");
-
                     await refreshProducts();
                     await mutate("all-products");
-
+                    toast.success(result.message || "Product added successfully");
                     return true;
                 } else {
                     toast.error(result.message || "Failed to add product");
@@ -111,9 +109,9 @@ export function useProduct() {
                 });
 
                 if (result.success) {
-                    toast.success(result.message || "Product updated successfully");
                     await refreshProducts();
                     setSelectedProduct(null);
+                    toast.success(result.message || "Product updated successfully");
                     return true;
                 } else {
                     toast.error(result.message || "Failed to update product");
@@ -135,8 +133,8 @@ export function useProduct() {
                 const result = await client.products.deleteProduct({ id: arg.id });
 
                 if (result.success) {
-                    toast.success(result.message || "Product deleted successfully");
                     await refreshProducts();
+                    toast.success(result.message || "Product deleted successfully");
                     return true;
                 } else {
                     toast.error(result.message || "Failed to delete product");
@@ -179,9 +177,9 @@ export function useProduct() {
                 });
 
                 if (result.success) {
-                    toast.success(result.message || "Product stock updated successfully");
                     await refreshProducts();
                     await mutate("all-products");
+                    toast.success(result.message || "Product stock updated successfully");
                     return true;
                 } else {
                     toast.error(result.message || "Failed to update product stock");
