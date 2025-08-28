@@ -83,6 +83,10 @@ export function OrdersTable({
                                 {order.saleType === 'CREDIT' ? (
                                     <Badge variant="destructive">
                                         Credit
+                                        <br />
+                                        <span className="text-xs text-muted-foreground">
+                                            Due: {order.creditDueDate ? new Date(order.creditDueDate).toLocaleDateString() : "N/A"}
+                                        </span>
                                     </Badge>
                                 ) : (
                                     <Badge variant="default">Cash</Badge>
