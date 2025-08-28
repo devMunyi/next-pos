@@ -68,8 +68,8 @@ export function useUnit() {
                 );
 
                 if (result.success) {
-                    toast.success("Unit added successfully");
                     yield* Effect.sync(() => refreshUnits());
+                    toast.success("Unit added successfully");
                 }
                 return result;
             });
@@ -84,11 +84,13 @@ export function useUnit() {
             const effect = Effect.gen(function* () {
                 const result = yield* Effect.tryPromise(() => client.units.updateUnit({ id: arg.id, ...arg.data }));
                 if (result.success) {
-                    toast.success("Unit updated successfully");
+
                     yield* Effect.sync(() => {
                         refreshUnits();
                         setSelectedUnit(null);
                     });
+
+                    toast.success("Unit updated successfully");
                 }
                 return result;
             });
@@ -106,8 +108,10 @@ export function useUnit() {
                 );
 
                 if (result.success) {
-                    toast.success("Unit deleted successfully");
+
                     yield* Effect.sync(() => refreshUnits());
+
+                    toast.success("Unit deleted successfully");
                 }
                 return result;
             });

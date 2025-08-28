@@ -87,8 +87,8 @@ export function useOrders() {
                 const result = await client.orders.deleteOrder({ id: arg.id });
 
                 if (result.success) {
-                    toast.success("Order deleted successfully");
                     await refreshOrders();
+                    toast.success("Order deleted successfully");
                     return result;
                 } else {
                     toast.error("Failed to delete order");

@@ -68,8 +68,8 @@ export function useCategory() {
             try {
                 const result = await client.categories.addCategory(arg);
                 if (result.success) {
-                    toast.success("Category added successfully");
                     await refreshCategories();
+                    toast.success("Category added successfully");
                 } else {
                     toast.error(result.message ?? "Failed to add category");
                 }
@@ -92,9 +92,10 @@ export function useCategory() {
                     ...arg.data,
                 });
                 if (result.success) {
-                    toast.success("Category updated successfully");
+
                     await refreshCategories();
                     setSelectedCategory(null);
+                    toast.success("Category updated successfully");
                 } else {
                     toast.error(result.message ?? "Failed to update category");
                 }
@@ -114,8 +115,8 @@ export function useCategory() {
             try {
                 const result = await client.categories.deleteCategory({ id: arg.id });
                 if (result.success) {
-                    toast.success("Category deleted successfully");
                     await refreshCategories();
+                    toast.success("Category deleted successfully");
                 } else {
                     toast.error(result.message ?? "Failed to delete category");
                 }

@@ -100,8 +100,8 @@ export function useUser() {
                         "Registration successful! Please check your email to verify your account."
                     );
                 } else {
-                    toast.success("Registration successful!");
                     await refreshUsers();
+                    toast.success("Registration successful!");
                 }
 
                 return true;
@@ -124,9 +124,9 @@ export function useUser() {
                 });
 
                 if (result.success) {
-                    toast.success("User updated successfully");
                     await refreshUsers();
                     setSelectedUser(null);
+                    toast.success("User updated successfully");
                     return true;
                 } else {
                     toast.error(result.message || "Failed to update user");
@@ -149,8 +149,8 @@ export function useUser() {
                 const result = await client.users.deleteUser({ id: arg.id });
 
                 if (result.success) {
-                    toast.success("User deleted successfully");
                     await refreshUsers();
+                    toast.success("User deleted successfully");
                     return true;
                 } else {
                     toast.error("Failed to delete user");
