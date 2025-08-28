@@ -82,7 +82,7 @@ export function OrdersTable({
                             <TableCell>
                                 {order.saleType === 'CREDIT' ? (
                                     <Badge variant="destructive">
-                                        {order.creditDueDate ? new Date(order.creditDueDate).toLocaleDateString() : 'N/A'}
+                                        Credit
                                     </Badge>
                                 ) : (
                                     <Badge variant="default">Cash</Badge>
