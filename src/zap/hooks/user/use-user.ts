@@ -145,6 +145,10 @@ export function useUser() {
     const { trigger: deleteUser, isMutating: isDeleting } = useSWRMutation(
         "delete-user",
         async (_key, { arg }: { arg: { id: string } }) => {
+
+            // Add delay for testing
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
             try {
                 const result = await client.users.deleteUser({ id: arg.id });
 

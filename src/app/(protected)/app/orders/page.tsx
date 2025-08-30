@@ -1,6 +1,6 @@
 // src/app/(protected)/app/products/page.tsx
 "use client";
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useOrders } from '@/zap/hooks/orders/use-orders';
 
@@ -9,6 +9,7 @@ import { OrdersTable } from './orders-table';
 import { OrdersToolbar } from './orders-toolbar';
 
 export default function OrdersPage() {
+    const [deletingId, setDeletingId] = useState<string | null>(null);
     const {
         orders,
         deleteOrder,
@@ -28,8 +29,13 @@ export default function OrdersPage() {
         refreshOrders();
     }, [searchTerm, pagination.page, pagination.pageSize, refreshOrders]);
 
-    const handleDelete = useCallback((id: string) => {
-        deleteOrder({ id });
+    const handleDelete = useCallback(async (id: string) => {
+        setDeletingId(id); // Set the ID of the order being deleted
+        try {
+            await deleteOrder({ id });
+        } finally {
+            setDeletingId(null); // Reset after delete completes (success or failure)
+        }
     }, [deleteOrder]);
 
     // const handleView = useCallback((order: Order) => {
@@ -63,6 +69,7 @@ export default function OrdersPage() {
                     isDeleting={isDeleting}
                     onPrint={() => console.log("Print Order")}
                     onDelete={handleDelete}
+                    deletingId={deletingId}
                     // onView={handleView}
                     rpp={pagination.pageSize}
                 />

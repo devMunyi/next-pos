@@ -1,9 +1,10 @@
 // src/app/(protected)/app/units/unit-table.tsx
 "use client";
-import { Button, Skeleton } from '@heroui/react';
+import { Skeleton } from '@heroui/react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
+import { ActionButton } from '@/components/actionButton';
 import { Badge } from '@/components/ui/badge';
 import {
     Table,
@@ -19,6 +20,7 @@ export function UnitTable({
     units,
     isLoading,
     isDeleting,
+    deletingId,
     onEdit,
     onDelete,
     rpp, // rows per page
@@ -26,6 +28,7 @@ export function UnitTable({
     units: ReadUnitInput[];
     isLoading: boolean;
     isDeleting: boolean;
+    deletingId: string | null;
     onEdit: (unit: ReadUnitInput) => void;
     onDelete: (id: string) => void;
     onView: (unit: ReadUnitInput) => void;
@@ -83,32 +86,25 @@ export function UnitTable({
                                 </Badge>
                             </TableCell>
                             <TableCell className="flex space-x-2">
-                                <Button
-                                    variant="ghost"
+                                {/* Edit Unit */}
+                                <ActionButton
+                                    onAction={() => onEdit(unit)}
+                                    ariaLabel='Edit Unit'
+                                    icon={PencilIcon}
+                                    variant='ghost'
                                     isIconOnly
-                                    aria-label='Edit Unit' // Accessibility label
-                                    onPress={() => onEdit(unit)}
-                                >
-                                    <PencilIcon className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                    variant="ghost"
+                                />
+
+                                {/* Delete Unit */}
+                                <ActionButton
+                                    id={unit.id}
+                                    onAction={() => onDelete(unit.id)}
+                                    ariaLabel='Delete Unit'
+                                    icon={TrashIcon}
+                                    variant='ghost'
                                     isIconOnly
-                                    aria-label='Delete Unit' // Accessibility label
-                                    onPress={() => onDelete(unit.id)}
-                                    disabled={isDeleting}
-                                    className={`${isDeleting ? "opacity-50 cursor-not-allowed" : ""
-                                        }`}
-                                >
-                                    <TrashIcon className="h-4 w-4 text-red-500" />
-                                </Button>
-                                {/* <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => onView(unit.id)}
-                                >
-                                    <EyeIcon className="h-4 w-4 text-blue-500" />
-                                </Button> */}
+                                    loading={deletingId === unit.id && isDeleting}
+                                />
                             </TableCell>
                         </TableRow>
                     ))

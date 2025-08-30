@@ -22,6 +22,7 @@ export default function UnitsPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isEditing, setIsEditing] = useState(false);
   const [, setCurrentUnit] = useState<ReadUnitInput | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const {
     units,
@@ -100,8 +101,13 @@ export default function UnitsPage() {
     refreshUnits();
   }, [searchTerm, pagination.page, pagination.pageSize, refreshUnits]);
 
-  const handleDelete = useCallback((id: string) => {
-    deleteUnit({ id });
+  const handleDelete = useCallback(async (id: string) => {
+    setDeletingId(id); // Set the ID of the unit being deleted
+    try {
+      await deleteUnit({ id });
+    } finally {
+      setDeletingId(null); // Reset after delete completes (success or failure)
+    }
   }, [deleteUnit]);
 
   const handleView = useCallback((unit: ReadUnitInput) => {
@@ -131,6 +137,7 @@ export default function UnitsPage() {
           units={units}
           isLoading={isLoading}
           isDeleting={isDeleting}
+          deletingId={deletingId}
           onEdit={handleEdit}
           onDelete={handleDelete}
           onView={handleView}

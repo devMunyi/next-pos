@@ -1,9 +1,10 @@
 // src/app/(protected)/app/orders/orders-table.tsx
 "use client";
-import { Button, Skeleton } from '@heroui/react';
+import { Skeleton } from '@heroui/react';
 import { PrinterIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
+import { ActionButton } from '@/components/actionButton';
 import { Badge } from '@/components/ui/badge';
 import {
     Table,
@@ -20,6 +21,7 @@ export function OrdersTable({
     orders,
     isLoading,
     isDeleting,
+    deletingId,
     onPrint,
     onDelete,
     // onView,
@@ -28,6 +30,7 @@ export function OrdersTable({
     orders: Order[];
     isLoading: boolean;
     isDeleting: boolean;
+    deletingId: string | null;
     onPrint: (order: Order) => void;
     onDelete: (id: string) => void;
     // onView: (order: Order) => void;
@@ -94,32 +97,26 @@ export function OrdersTable({
                             </TableCell>
 
                             <TableCell className="flex space-x-2">
-                                <Button
+                                {/* Print Order */}
+                                <ActionButton
+                                    id={order.id}
+                                    onAction={() => onPrint(order)}
+                                    ariaLabel='Print Order'
+                                    icon={PrinterIcon}
+                                    variant='ghost'
                                     isIconOnly
-                                    variant="ghost"
-                                    onPress={() => onPrint(order)}
-                                    aria-label='Print Order' // Accessibility label
-                                >
-                                    <PrinterIcon className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                    variant="ghost"
+                                />
+
+                                {/* Delete Order */}
+                                <ActionButton
+                                    id={order.id}
+                                    onAction={() => onDelete(order.id)}
+                                    ariaLabel='Delete Order'
+                                    icon={TrashIcon}
+                                    variant='ghost'
                                     isIconOnly
-                                    aria-label='Delete Order' // Accessibility label
-                                    onPress={() => onDelete(order.id)}
-                                    disabled={isDeleting}
-                                    className={`${isDeleting ? "opacity-50 cursor-not-allowed" : ""
-                                        }`}
-                                >
-                                    <TrashIcon className="h-4 w-4 text-red-500" />
-                                </Button>
-                                {/* <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => onView(order.id)}
-                                >
-                                    <EyeIcon className="h-4 w-4 text-blue-500" />
-                                </Button> */}
+                                    loading={deletingId === order.id && isDeleting}
+                                />
                             </TableCell>
                         </TableRow>
                     ))

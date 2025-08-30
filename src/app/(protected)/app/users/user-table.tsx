@@ -1,9 +1,10 @@
 // src/app/(protected)/app/units/unit-table.tsx
 "use client";
-import { Badge, Button, Skeleton } from '@heroui/react';
+import { Badge, Skeleton } from '@heroui/react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
+import { ActionButton } from '@/components/actionButton';
 import {
     Table,
     TableBody,
@@ -20,6 +21,7 @@ export function UserTable({
     users,
     isLoading,
     isDeleting,
+    deletingId,
     onEdit,
     onDelete,
     rpp, // rows per page
@@ -27,11 +29,15 @@ export function UserTable({
     users: User[];
     isLoading: boolean;
     isDeleting: boolean;
+    deletingId: string | null;
     onEdit: (user: User) => void;
     onDelete: (id: string) => void;
     onView: (user: User) => void;
     rpp: number; // optional prop for rows per page
 }) {
+
+    console.log({ deletingId, userId: users.map(u => u.id) });
+
     return (
         <Table>
             <TableHeader>
@@ -86,30 +92,25 @@ export function UserTable({
                                 </Badge>
                             </TableCell> */}
                             <TableCell className="flex space-x-2">
-                                <Button
-                                    variant="ghost"
+                                {/* Edit User */}
+                                <ActionButton
+                                    onAction={() => onEdit(user)}
+                                    ariaLabel='Edit User'
+                                    icon={PencilIcon}
+                                    variant='ghost'
                                     isIconOnly
-                                    onPress={() => onEdit(user)}
-                                    aria-label='Edit User' // Accessibility label
-                                >
-                                    <PencilIcon className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                    variant="ghost"
+                                />
+
+                                {/* Delete User */}
+                                <ActionButton
+                                    id={user.id}
+                                    onAction={() => onDelete(user.id)}
+                                    ariaLabel='Delete User'
+                                    icon={TrashIcon}
+                                    variant='ghost'
+                                    loading={deletingId === user.id && isDeleting}
                                     isIconOnly
-                                    onPress={() => onDelete(user.id)}
-                                    disabled={isDeleting}
-                                    aria-label='Delete User' // Accessibility label
-                                >
-                                    <TrashIcon className="h-4 w-4 text-red-500" />
-                                </Button>
-                                {/* <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => onView(unit.id)}
-                                >
-                                    <EyeIcon className="h-4 w-4 text-blue-500" />
-                                </Button> */}
+                                />
                             </TableCell>
                         </TableRow>
                     ))

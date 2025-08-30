@@ -45,6 +45,7 @@ export default function CategoryPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isEditing, setIsEditing] = useState(false);
   const [, setCurrentCategory] = useState<ReadCategoryInput | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const {
     categories,
@@ -111,8 +112,14 @@ export default function CategoryPage() {
     form.reset();
   }, [isEditing, selectedCategory, updateCategory, addCategory, onOpenChange, form]);
 
-  const handleDelete = useCallback((id: string) => {
-    deleteCategory({ id });
+
+  const handleDelete = useCallback(async (id: string) => {
+    setDeletingId(id); // Set the ID of the category being deleted
+    try {
+      await deleteCategory({ id });
+    } finally {
+      setDeletingId(null); // Reset after delete completes (success or failure)
+    }
   }, [deleteCategory]);
 
   // const handleView = useCallback((category: ReadCategoryInput) => {
@@ -146,6 +153,7 @@ export default function CategoryPage() {
           categories={categories}
           isLoading={isLoading}
           isDeleting={isDeleting}
+          deletingId={deletingId}
           onEdit={handleEdit}
           onDelete={handleDelete}
           // onView={handleView}

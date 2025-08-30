@@ -1,10 +1,10 @@
 // src/app/(protected)/app/category/category-table.tsx
 "use client";
-import { Button, Skeleton } from '@heroui/react';
+import { Badge, Skeleton } from '@heroui/react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
-import { Badge } from '@/components/ui/badge';
+import { ActionButton } from '@/components/actionButton';
 import {
     Table,
     TableBody,
@@ -19,6 +19,7 @@ export function CategoryTable({
     categories,
     isLoading,
     isDeleting,
+    deletingId,
     onEdit,
     onDelete,
     // onView,
@@ -27,6 +28,7 @@ export function CategoryTable({
     categories: ReadCategoryInput[];
     isLoading: boolean;
     isDeleting: boolean;
+    deletingId: string | null;
     onEdit: (category: ReadCategoryInput) => void;
     onDelete: (id: string) => void;
     // onView: (category: ReadCategoryInput) => void;
@@ -74,33 +76,33 @@ export function CategoryTable({
                             <TableCell>
                                 <Badge
                                     variant={
-                                        category.status === 'ACTIVE' ? 'default' : 'secondary'
+                                        category.status === 'ACTIVE' ? 'solid' : 'faded'
                                     }
                                 >
                                     {category.status}
                                 </Badge>
                             </TableCell>
                             <TableCell className="flex space-x-2">
-                                <Button
-                                    variant="ghost"
+
+                                {/* Edit Category */}
+                                <ActionButton
+                                    onAction={() => onEdit(category)}
+                                    ariaLabel='Edit Category'
+                                    icon={PencilIcon}
+                                    variant='ghost'
                                     isIconOnly
-                                    onPress={() => onEdit(category)}
-                                    aria-label='Edit Category' // Accessibility label
-                                >
-                                    <PencilIcon className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                    className={`${
-                                        isDeleting ? "opacity-50 cursor-not-allowed" : ""
-                                    }`}
-                                    variant="ghost"
+                                />
+
+                                {/* Delete Category */}
+                                <ActionButton
+                                    id={category.id}
+                                    onAction={() => onDelete(category.id)}
+                                    ariaLabel='Delete Category'
+                                    icon={TrashIcon}
+                                    variant='ghost'
                                     isIconOnly
-                                    onPress={() => onDelete(category.id)}
-                                    disabled={isDeleting}
-                                    aria-label='Delete Category' // Accessibility label
-                                >
-                                    <TrashIcon className="h-4 w-4 text-red-500" />
-                                </Button>
+                                    loading={deletingId === category.id && isDeleting}
+                                />
                                 {/* <Button
                                     variant="ghost"
                                     size="icon"

@@ -20,6 +20,7 @@ export default function UsersPage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isEditing, setIsEditing] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const {
     users,
@@ -137,8 +138,13 @@ export default function UsersPage() {
     refreshUsers();
   }, [searchTerm, pagination.page, pagination.pageSize, refreshUsers]);
 
-  const handleDelete = useCallback((id: string) => {
-    deleteUser({ id });
+  const handleDelete = useCallback(async (id: string) => {
+    setDeletingId(id); // Set the ID of the user being deleted
+    try {
+      await deleteUser({ id });
+    } finally {
+      setDeletingId(null); // Reset after delete completes (success or failure)
+    }
   }, [deleteUser]);
 
   const handleView = useCallback((user: User) => {
@@ -167,6 +173,7 @@ export default function UsersPage() {
           users={Array.isArray(users) ? users : users.users}
           isLoading={isLoading}
           isDeleting={isDeleting}
+          deletingId={deletingId} // Pass the specific ID being deleted
           onEdit={handleEdit}
           onDelete={handleDelete}
           onView={handleView}
