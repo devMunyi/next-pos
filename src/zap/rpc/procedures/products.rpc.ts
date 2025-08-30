@@ -108,7 +108,6 @@ export const products = {
                         description: product.description,
                         originalPrice: product.purchasePrice,
                         sellingPrice: product.sellingPrice,
-                        expectedProfit: product.expectedProfit,
                         stock: product.availableStock,
                         unit: unit.name,
                         category: category.name,
@@ -137,7 +136,6 @@ export const products = {
                         description: product.description,
                         originalPrice: product.purchasePrice,
                         sellingPrice: product.sellingPrice,
-                        expectedProfit: product.expectedProfit,
                         stock: product.availableStock,
                         unit: unit.name,
                         category: category.name,
@@ -172,9 +170,8 @@ export const products = {
                         primaryOrSecAffectedEntityID: String(input.id),
                         originalData: dataBeforeUpdate[0],
                         newData: dataAfterUpdate[0],
-                        skipFields: ["id"],
-                        session,
-                        otherDetails: 'Product stock changed during product update'
+                        skipFields: ["id", "expectedProfit"],
+                        session
                     })
                 }
 
