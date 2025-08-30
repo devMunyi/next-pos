@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { capitalizeString } from "../lib/util/common.util";
+import { capitalizeString } from "../lib/util/common.client.util";
 
 // Base schema without refinement (used for extension)
 const baseProductSchema = z.object({

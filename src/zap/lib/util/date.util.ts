@@ -27,3 +27,13 @@ dayjs.updateLocale('en', {
 export function fancyDate(date: Date | string | dayjs.Dayjs): string {
     return dayjs(date).fromNow();
 }
+
+
+export function nowDatetimeObject() {
+    return dayjs().toDate();
+}
+
+
+export function toRelativeTime(dateString: string | Date): string {
+    return dayjs(dateString).fromNow();
+}

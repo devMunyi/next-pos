@@ -99,3 +99,6 @@ export const auth = betterAuth({
     }),
   ],
 });
+
+// export session
+export type Session = Promise<ReturnType<typeof auth.api.getSession>>;

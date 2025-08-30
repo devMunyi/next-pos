@@ -4,6 +4,7 @@ export * from "@/zap/db/schema/category.sql";
 export * from "@/zap/db/schema/credit-limit.sql";
 export * from "@/zap/db/schema/credit-repayments.sql";
 export * from "@/zap/db/schema/customers.sql";
+export * from "@/zap/db/schema/events.sql";
 export * from "@/zap/db/schema/feedbacks.sql";
 export * from "@/zap/db/schema/invoice-details.sql";
 export * from "@/zap/db/schema/invoices.sql";

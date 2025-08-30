@@ -1,6 +1,7 @@
 import { FormField } from "@/components/add-edit-form";
 import { addUserSchema, updateUserSchema } from "@/zap/schemas/auth.schema";
 import { createUnitSchema } from "@/zap/schemas/unit.schema";
+export type commonStatus = 'ACTIVE' | 'INACTIVE';
 
 export const statusOptions = [
   { value: 'ACTIVE', label: 'Active' },

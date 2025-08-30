@@ -13,7 +13,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { capitalizeString } from '@/zap/lib/util/common.util';
+import { capitalizeString } from '@/zap/lib/util/common.client.util';
 import { fancyDate } from '@/zap/lib/util/date.util';
 import { User } from '@/zap/types/infer-rpc';
 

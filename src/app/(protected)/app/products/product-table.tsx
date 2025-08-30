@@ -7,7 +7,7 @@ import React from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { capitalizeString, formatCurrency } from '@/zap/lib/util/common.util';
+import { capitalizeString, formatCurrency } from '@/zap/lib/util/common.client.util';
 import { Product } from '@/zap/types/infer-rpc';
 
 export function ProductTable({

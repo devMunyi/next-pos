@@ -5,6 +5,7 @@ import { and, asc, desc, eq, ilike, inArray, sql } from "drizzle-orm";
 
 import { category, product, ProductInsert, stockHistory, unit } from "@/db/schema";
 import { authMiddleware, base, noAuthMiddleware } from "@/rpc/middlewares";
+import { storeChangeLog } from "@/zap/lib/util/common.server.util";
 import {
     createProductSchema,
     deleteProductSchema,
@@ -23,14 +24,27 @@ export const products = {
             try {
                 const userId = session.user.id;
 
-                await db.insert(product).values({
+                const resp = await db.insert(product).values({
                     createdBy: userId,
                     createdAt: new Date().toISOString(),
                     ...input,
                     purchasePrice: String(input.purchasePrice),
                     sellingPrice: String(input.sellingPrice),
                     expectedProfit: String(input.sellingPrice - input.purchasePrice),
-                });
+                }).returning({ id: product.id, availableStock: product.availableStock }).execute();
+
+                if (resp.length > 0) {
+                    await db.insert(stockHistory).values({
+                        product_id: resp[0].id,
+                        previous_stock: "0",
+                        new_stock: String(resp[0].availableStock ?? 0),
+                        change_amount: String((resp[0].availableStock ?? 0) - 0),
+                        changed_by: userId,
+                        change_reason: "NEW_STOCK",
+                        change_note: "Initial stock on product creation",
+                        status: "ACTIVE",
+                    });
+                }
 
                 return { success: true, message: "Product created successfully" };
             } catch (e) {
@@ -85,10 +99,84 @@ export const products = {
 
                 updateData.updatedAt = new Date().toISOString();
 
+                //= Get data before update
+                const dataBeforeUpdate = await db
+                    .select({
+                        id: product.id,
+                        code: product.code,
+                        name: product.name,
+                        description: product.description,
+                        originalPrice: product.purchasePrice,
+                        sellingPrice: product.sellingPrice,
+                        expectedProfit: product.expectedProfit,
+                        stock: product.availableStock,
+                        unit: unit.name,
+                        category: category.name,
+                        status: product.status,
+                    })
+                    .from(product)
+                    .leftJoin(unit, eq(product.unitId, unit.id))
+                    .leftJoin(category, eq(product.categoryId, category.id))
+                    .where(and(eq(product.id, input.id), eq(product.createdBy, userId)))
+                    .execute();
+
+                //= Update product
                 await db
                     .update(product)
                     .set(updateData)
-                    .where(and(eq(product.id, input.id), eq(product.createdBy, userId)));
+                    .where(and(eq(product.id, input.id)))
+                    .execute();
+
+
+                //= Get data after update
+                const dataAfterUpdate = await db
+                    .select({
+                        id: product.id,
+                        code: product.code,
+                        name: product.name,
+                        description: product.description,
+                        originalPrice: product.purchasePrice,
+                        sellingPrice: product.sellingPrice,
+                        expectedProfit: product.expectedProfit,
+                        stock: product.availableStock,
+                        unit: unit.name,
+                        category: category.name,
+                        status: product.status,
+                    })
+                    .from(product)
+                    .leftJoin(unit, eq(product.unitId, unit.id))
+                    .leftJoin(category, eq(product.categoryId, category.id))
+                    .where(and(eq(product.id, input.id), eq(product.createdBy, userId)))
+                    .execute();
+
+                if (dataBeforeUpdate[0]?.stock !== dataAfterUpdate[0]?.stock) {
+                    // Insert stock history
+                    await db.insert(stockHistory).values({
+                        product_id: input.id,
+                        previous_stock: String(dataBeforeUpdate[0]?.stock ?? 0),
+                        new_stock: String(dataAfterUpdate[0]?.stock ?? 0),
+                        change_amount: String((dataAfterUpdate[0]?.stock ?? 0) - (dataBeforeUpdate[0]?.stock ?? 0)),
+                        changed_by: userId,
+                        change_reason: "NEW_STOCK",
+                        change_note: "Initial stock on product creation",
+                        status: "ACTIVE",
+                    });
+
+
+                    // store change log
+                    await storeChangeLog({
+                        action: 'update',
+                        primaryAffectedEntity: 'Product',
+                        primaryAffectedEntityID: String(input.id),
+                        primaryOrSecAffectedTable: 'product',
+                        primaryOrSecAffectedEntityID: String(input.id),
+                        originalData: dataBeforeUpdate[0],
+                        newData: dataAfterUpdate[0],
+                        skipFields: ["id"],
+                        session,
+                        otherDetails: 'Product stock changed during product update'
+                    })
+                }
 
                 return { success: true, message: "Product updated successfully" };
             } catch (e) {
@@ -192,6 +280,20 @@ export const products = {
                     .delete(product)
                     .where(and(eq(product.id, input.id), eq(product.createdBy, userId)));
 
+
+                //= store change log
+                await storeChangeLog({
+                    action: 'delete',
+                    primaryAffectedEntity: 'Product',
+                    primaryAffectedEntityID: String(input.id),
+                    primaryOrSecAffectedTable: 'product',
+                    primaryOrSecAffectedEntityID: String(input.id),
+                    originalData: { id: input.id },
+                    newData: {},
+                    skipFields: ["id"],
+                    session
+                });
+
                 return { success: true, message: "Product deleted successfully" };
             } catch (e) {
                 return {
@@ -244,26 +346,42 @@ export const products = {
                 const newStock = Number(input.availableStock);
                 const changeAmount = newStock - previousStock;
 
-                // 2. Update product stock
-                await db
-                    .update(product)
-                    .set({
-                        availableStock: newStock,
-                        updatedAt: new Date().toISOString(),
-                    })
-                    .where(and(eq(product.id, input.id), eq(product.createdBy, userId)));
 
-                // 3. Insert stock history record
-                await db.insert(stockHistory).values({
-                    product_id: input.id,
-                    previous_stock: previousStock.toString(), // decimal → string
-                    new_stock: newStock.toString(),
-                    change_amount: changeAmount.toString(),
-                    changed_by: userId,
-                    change_reason: input.reason,
-                    change_note: input.otherReason ?? null,
-                    status: "ACTIVE",
-                });
+                if (newStock !== previousStock) {
+                    // 2. Update product stock
+                    await db
+                        .update(product)
+                        .set({
+                            availableStock: newStock,
+                            updatedAt: new Date().toISOString(),
+                        })
+                        .where(and(eq(product.id, input.id), eq(product.createdBy, userId)));
+
+                    // 3. Insert stock history record
+                    await db.insert(stockHistory).values({
+                        product_id: input.id,
+                        previous_stock: previousStock.toString(), // decimal → string
+                        new_stock: newStock.toString(),
+                        change_amount: changeAmount.toString(),
+                        changed_by: userId,
+                        change_reason: input.reason,
+                        change_note: input.otherReason ?? null,
+                        status: "ACTIVE",
+                    });
+
+                    //= store change log
+                    await storeChangeLog({
+                        action: 'update',
+                        primaryAffectedEntity: 'Stock',
+                        primaryAffectedEntityID: String(input.id),
+                        primaryOrSecAffectedTable: 'product',
+                        primaryOrSecAffectedEntityID: String(input.id),
+                        originalData: { stock: previousStock },
+                        newData: { stock: newStock },
+                        skipFields: ["id"],
+                        session
+                    })
+                }
 
                 return {
                     success: true,

@@ -8,7 +8,7 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { client } from "@/zap/lib/orpc/client";
-import { getErrorMessage } from "@/zap/lib/util/common.util";
+import { getErrorMessage } from "@/zap/lib/util/common.client.util";
 import { DEFAULT_PAGE_SIZE } from "@/zap/lib/util/constants";
 import {
     CreateCategoryInput,

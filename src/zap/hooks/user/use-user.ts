@@ -11,7 +11,7 @@ import { SETTINGS } from "@/data/settings";
 import { authClient } from "@/zap/lib/auth/client";
 import { handleCompromisedPasswordError } from "@/zap/lib/auth/utils";
 import { client } from "@/zap/lib/orpc/client";
-import { getErrorMessage } from "@/zap/lib/util/common.util";
+import { getErrorMessage } from "@/zap/lib/util/common.client.util";
 import { DEFAULT_PAGE_SIZE } from "@/zap/lib/util/constants";
 import { AddUserInput, UpdateUserInput } from "@/zap/schemas/auth.schema";
 import { User } from "@/zap/types/infer-rpc";

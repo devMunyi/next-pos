@@ -2,6 +2,8 @@ import { createCipheriv, createDecipheriv, createHash } from "crypto";
 
 import { ENV } from "@/lib/env.client";
 
+
+
 export const makePhoneValid = (phone: string): string => {
     phone = phone.trim().replace(/\s+/g, "").replace(/\+/g, "");
 

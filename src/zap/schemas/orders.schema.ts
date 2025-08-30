@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { isPhoneValid, makePhoneValid } from "../lib/util/common.util";
+import { isPhoneValid, makePhoneValid } from "../lib/util/common.client.util";
 
 // List/Filter Orders Schema
 export const listOrdersSchema = z.object({
