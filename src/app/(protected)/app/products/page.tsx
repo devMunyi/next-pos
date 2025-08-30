@@ -16,7 +16,7 @@ import { useOrders } from '@/zap/hooks/orders/use-orders';
 import { useProduct } from '@/zap/hooks/product/use-product';
 import { useUnit } from '@/zap/hooks/unit/use-units';
 import { CreateOrderInput } from '@/zap/schemas/orders.schema';
-import { CreateProductInput, createProductSchema } from '@/zap/schemas/product.schema';
+import { CreateProductInput, createProductSchema, UpdateStockInput } from '@/zap/schemas/product.schema';
 import { Product } from '@/zap/types/infer-rpc';
 
 import { Pagination } from '../../../../components/pagination';
@@ -238,11 +238,13 @@ export default function ProductPage() {
   };
 
   // submit handler
-  const handleStockUpdateSubmit = async (data: { availableStock: number }) => {
+  const handleStockUpdateSubmit = async (data: UpdateStockInput) => {
     if (!stockProduct) return;
     await updateStock({
       id: stockProduct.id,
       availableStock: data.availableStock,
+      reason: data.reason,
+      otherReason: data.otherReason
     });
     onStockOpenChange();
     setStockProduct(null);

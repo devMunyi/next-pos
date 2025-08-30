@@ -3,7 +3,7 @@ import "server-only";
 
 import { and, asc, desc, eq, ilike, inArray, sql } from "drizzle-orm";
 
-import { category, product, ProductInsert, unit } from "@/db/schema";
+import { category, product, ProductInsert, stockHistory, unit } from "@/db/schema";
 import { authMiddleware, base, noAuthMiddleware } from "@/rpc/middlewares";
 import {
     createProductSchema,
@@ -200,6 +200,7 @@ export const products = {
                 };
             }
         }),
+
     getAllProducts: base
         .use(noAuthMiddleware).handler(async ({ context: { db } }) => {
             try {
@@ -219,13 +220,13 @@ export const products = {
         }),
 
     updateProductStock: base
-        .use(authMiddleware) // Use auth middleware instead of noAuthMiddleware
+        .use(authMiddleware)
         .input(updateStockSchema)
         .handler(async ({ context: { db, session }, input }) => {
             try {
                 const userId = session.user.id;
 
-                // Check if product exists and belongs to the user
+                // 1. Check if product exists and belongs to the user
                 const existingProduct = await db
                     .select()
                     .from(product)
@@ -235,22 +236,38 @@ export const products = {
                 if (!existingProduct) {
                     return {
                         success: false,
-                        message: "Product not found or you don't have permission to update it"
+                        message: "Product not found or you don't have permission to update it",
                     };
                 }
 
-                // Update the product stock
+                const previousStock = Number(existingProduct.availableStock);
+                const newStock = Number(input.availableStock);
+                const changeAmount = newStock - previousStock;
+
+                // 2. Update product stock
                 await db
                     .update(product)
                     .set({
-                        availableStock: input.availableStock,
-                        updatedAt: new Date().toISOString()
+                        availableStock: newStock,
+                        updatedAt: new Date().toISOString(),
                     })
                     .where(and(eq(product.id, input.id), eq(product.createdBy, userId)));
 
+                // 3. Insert stock history record
+                await db.insert(stockHistory).values({
+                    product_id: input.id,
+                    previous_stock: previousStock.toString(), // decimal → string
+                    new_stock: newStock.toString(),
+                    change_amount: changeAmount.toString(),
+                    changed_by: userId,
+                    change_reason: input.reason,
+                    change_note: input.otherReason ?? null,
+                    status: "ACTIVE",
+                });
+
                 return {
                     success: true,
-                    message: "Product stock updated successfully"
+                    message: "Product stock updated successfully",
                 };
             } catch (e) {
                 return {

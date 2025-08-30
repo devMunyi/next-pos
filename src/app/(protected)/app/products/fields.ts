@@ -33,12 +33,36 @@ export const checkoutFields: FormField<typeof createOrderSchemaPermissive>[] = [
     },
 ];
 
+export const stockReasonOptions = [
+    { value: "NEW_STOCK", label: "New Stock Received" },
+    { value: "SALES_ADJUSTMENT", label: "Sales Adjustment" },
+    { value: "CUSTOMER_RETURN", label: "Customer Return" },
+    { value: "DAMAGED_EXPIRED", label: "Damaged / Expired Items" },
+    { value: "LOST_STOLEN", label: "Lost / Stolen Items" },
+    { value: "STOCK_TRANSFER", label: "Stock Transfer" },
+    { value: "INVENTORY_COUNT", label: "Inventory Count Adjustment" },
+    { value: "PROMOTIONAL_USE", label: "Promotional Use / Free Sample" },
+    { value: "BUNDLE_ADJUSTMENT", label: "Bundle / Unbundle Adjustment" },
+    { value: "OTHER", label: "Other (Please specify)" },
+];
 
 export const stockFields: FormField<typeof updateStockSchema>[] = [
     {
         name: "availableStock",
         label: "Available Stock",
         type: "number",
+    },
+    {
+        name: "reason",
+        label: "Reason for Update",
+        type: "select",
+        options: stockReasonOptions,
+    },
+    {
+        name: "otherReason",
+        label: "Specify Other Reason",
+        type: "text",
+        showIf: (values) => values.reason === "OTHER",
     },
 ];
 

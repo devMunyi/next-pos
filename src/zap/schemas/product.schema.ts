@@ -77,10 +77,35 @@ export const productIds = z.object({
     ids: z.array(z.string()).min(1, "At least one ID is required")
 });
 
+// src/zap/schemas/product.schema.ts
 export const updateStockSchema = z.object({
-    id: z.string(), // Add product ID
+    id: z.string(), // product ID
     availableStock: z.coerce.number().min(0, "Stock cannot be negative"),
+    reason: z.enum([
+        "NEW_STOCK",
+        "SALES_ADJUSTMENT",
+        "CUSTOMER_RETURN",
+        "DAMAGED_EXPIRED",
+        "LOST_STOLEN",
+        "STOCK_TRANSFER",
+        "INVENTORY_COUNT",
+        "PROMOTIONAL_USE",
+        "BUNDLE_ADJUSTMENT",
+        "OTHER",
+    ], {
+        required_error: "Reason is required"
+    }),
+    otherReason: z.string().optional(), // only required if reason = OTHER
+}).refine((data) => {
+    if (data.reason === "OTHER") {
+        return !!data.otherReason?.trim();
+    }
+    return true;
+}, {
+    message: "Please specify the reason",
+    path: ["otherReason"],
 });
+
 export type UpdateStockInput = z.infer<typeof updateStockSchema>;
 
 // Type exports

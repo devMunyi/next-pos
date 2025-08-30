@@ -33,6 +33,9 @@ export function StockUpdateModal({
         defaultValues: {
             id: productId, // Set the product ID
             availableStock: initialStock,
+            reason: undefined,
+            otherReason: undefined
+
         },
     });
 

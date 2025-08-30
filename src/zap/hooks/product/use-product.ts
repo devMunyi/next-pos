@@ -10,7 +10,7 @@ import useSWRMutation from "swr/mutation";
 import { client } from "@/zap/lib/orpc/client";
 import { getErrorMessage } from "@/zap/lib/util/common.util";
 import { DEFAULT_PAGE_SIZE } from "@/zap/lib/util/constants";
-import { CreateProductInput } from "@/zap/schemas/product.schema";
+import { CreateProductInput, UpdateStockInput } from "@/zap/schemas/product.schema";
 import { Product } from "@/zap/types/infer-rpc";
 
 import { useDebounce } from "../use-debounce";
@@ -169,11 +169,13 @@ export function useProduct() {
     // Update product stock
     const { trigger: updateStock, isMutating: isUpdatingStock } = useSWRMutation(
         "update-stock",
-        async (_key, { arg }: { arg: { id: string; availableStock: number } }) => {
+        async (_key, { arg }: { arg: UpdateStockInput }) => {
             try {
                 const result = await client.products.updateProductStock({
                     id: arg.id,
                     availableStock: arg.availableStock,
+                    reason: arg.reason,
+                    otherReason: arg.otherReason
                 });
 
                 if (result.success) {

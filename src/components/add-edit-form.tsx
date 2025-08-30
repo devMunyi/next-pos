@@ -9,10 +9,11 @@ import { z } from 'zod';
 export type FormField<T extends z.ZodTypeAny> = {
   name: Path<z.infer<T> extends FieldValues ? FieldValues & z.infer<T> : FieldValues>;
   label: string;
-  type: 'text' | 'select' | 'number' | 'textarea' | 'password' | 'email' | 'date'
+  type: 'text' | 'select' | 'number' | 'textarea' | 'password' | 'email' | 'date';
   options?: { value: string; label: string }[];
   disabled?: boolean;
   isLoading?: boolean;
+  showIf?: (values: z.infer<T>) => boolean;
 };
 
 import type { FieldValues } from "react-hook-form";
@@ -34,7 +35,8 @@ export function AddEditForm<T extends z.ZodTypeAny>({
   columns = { base: 1, md: 2 },
   gap = 4,
 }: AddEditFormProps<T>) {
-  // Generate grid class based on columns prop
+  const values = form.watch(); // 👈 get all current form values
+
   const getGridClass = () => {
     const classes = [];
     if (columns.base) classes.push(`grid-cols-${columns.base}`);
@@ -46,64 +48,67 @@ export function AddEditForm<T extends z.ZodTypeAny>({
   return (
     <form onSubmit={form.handleSubmit(() => { })} key={fields.map(f => f.name).join('-')}>
       <div className={`grid ${getGridClass()} gap-${gap}`}>
-        {fields.map((field) => (
-          <div key={field.name} className="space-y-4">
-            <Controller
-              name={field.name}
-              control={form.control}
-              render={({ field: controllerField, fieldState }) => {
-                // Add this conversion for number inputs
-                const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                  if (field.type === 'number') {
-                    controllerField.onChange(e.target.valueAsNumber);
-                  } else {
-                    controllerField.onChange(e.target.value);
-                  }
-                };
+        {fields.map((field) => {
+          // 👇 skip if showIf is defined and returns false
+          if (field.showIf && !field.showIf(values)) {
+            return null;
+          }
 
-                switch (field.type) {
-                  case 'select':
-                    return (
-                      <Select
-                        label={field.label}
-                        selectedKeys={controllerField.value ? [controllerField.value] : []}
-                        onSelectionChange={(keys) =>
-                          controllerField.onChange(Array.from(keys)[0])
-                        }
-                        isInvalid={!!fieldState.error}
-                        errorMessage={fieldState.error?.message}
-                        isDisabled={field.disabled || field.isLoading}
-                      >
-                        {(field.options ?? []).map((option) => (
-                          <SelectItem key={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    );
-                  default:
-                    return (
-                      <Input
-                        {...controllerField}
-                        label={field.label}
-                        type={field.type}
-                        isInvalid={!!fieldState.error}
-                        errorMessage={fieldState.error?.message}
-                        isDisabled={field.disabled || field.isLoading}
-                        // Add this onChange handler
-                        onChange={handleChange}
-                        // Ensure proper value type for number inputs
-                        value={field.type === 'number'
-                          ? String(controllerField.value ?? 0)
-                          : controllerField.value
-                        }
-                      />
-                    );
-                }
-              }}
-            />
-          </div>
-        ))}
+          return (
+            <div key={field.name} className="space-y-4">
+              <Controller
+                name={field.name}
+                control={form.control}
+                render={({ field: controllerField, fieldState }) => {
+                  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                    if (field.type === 'number') {
+                      controllerField.onChange(e.target.valueAsNumber);
+                    } else {
+                      controllerField.onChange(e.target.value);
+                    }
+                  };
+
+                  switch (field.type) {
+                    case 'select':
+                      return (
+                        <Select
+                          label={field.label}
+                          selectedKeys={controllerField.value ? [controllerField.value] : []}
+                          onSelectionChange={(keys) =>
+                            controllerField.onChange(Array.from(keys)[0])
+                          }
+                          isInvalid={!!fieldState.error}
+                          errorMessage={fieldState.error?.message}
+                          isDisabled={field.disabled || field.isLoading}
+                        >
+                          {(field.options ?? []).map((option) => (
+                            <SelectItem key={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      );
+                    default:
+                      return (
+                        <Input
+                          {...controllerField}
+                          label={field.label}
+                          type={field.type}
+                          isInvalid={!!fieldState.error}
+                          errorMessage={fieldState.error?.message}
+                          isDisabled={field.disabled || field.isLoading}
+                          onChange={handleChange}
+                          value={field.type === 'number'
+                            ? String(controllerField.value ?? 0)
+                            : controllerField.value}
+                        />
+                      );
+                  }
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
       <button type="submit" className="hidden" />
     </form>

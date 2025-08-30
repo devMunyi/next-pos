@@ -9,6 +9,7 @@ export * from "@/zap/db/schema/invoice-details.sql";
 export * from "@/zap/db/schema/invoices.sql";
 export * from "@/zap/db/schema/notifications.sql";
 export * from "@/zap/db/schema/products.sql";
+export * from "@/zap/db/schema/stock-history.sql";
 export * from "@/zap/db/schema/units.sql";
 export * from "@/zap/db/schema/waitlist.sql";
 
