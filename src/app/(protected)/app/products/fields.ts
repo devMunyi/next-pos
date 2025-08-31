@@ -33,6 +33,7 @@ export const checkoutFields: FormField<typeof createOrderSchemaPermissive>[] = [
     },
 ];
 
+
 export const stockReasonOptions = [
     { value: "NEW_STOCK", label: "New Stock Received" },
     { value: "SALES_ADJUSTMENT", label: "Sales Adjustment" },
@@ -45,6 +46,12 @@ export const stockReasonOptions = [
     { value: "BUNDLE_ADJUSTMENT", label: "Bundle / Unbundle Adjustment" },
     { value: "OTHER", label: "Other (Please specify)" },
 ];
+
+// derive the map automatically
+export const stockReasonMap = Object.fromEntries(
+    stockReasonOptions.map(opt => [opt.value, opt.label])
+) as Record<string, string>;
+
 
 export const stockFields: FormField<typeof updateStockSchema>[] = [
     {

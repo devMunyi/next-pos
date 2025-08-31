@@ -23,8 +23,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useDashboard } from "@/zap/hooks/dashboard/use-dashboard";
+import { fancyDate } from "@/zap/lib/util/date.util";
 import { DailyMetric, DashboardSummaryResponse } from "@/zap/types/infer-rpc";
+
+import { stockReasonMap } from "./products/fields";
 
 // Helper function to format date to YYYY-MM-DD hh:mm:ss
 const formatDateToDBString = (date: Date): string => {
@@ -65,24 +75,32 @@ interface MetricConfig {
 }
 
 const metrics: MetricConfig[] = [
-  { key: "totalProducts", label: "Total Products", className: "bg-blue-500 text-white" },
   { key: "cashSales", label: "Cash Sales", className: "bg-green-500 text-white" },
   { key: "creditSales", label: "Credit Sales", className: "bg-yellow-500 text-white" },
   { key: "creditRepayments", label: "Credit Repayments", className: "bg-purple-500 text-white" },
   { key: "expenses", label: "Expenses", className: "bg-red-500 text-white" },
   { key: "profit", label: "Profit", className: "bg-teal-500 text-white" },
-  // { key: "netProfit", label: "Net Profit" },
 ];
 
 export default function DashboardPage() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [selectedProduct, setSelectedProduct] = useState("all");
+
 
   // Set default date range to current month on component mount
   useEffect(() => {
     setDateRange(getMonthDateRange());
   }, []);
 
-  const { summary, todaySummary, isLoading, isTodayLoading } = useDashboard(
+  const {
+    summary,
+    todaySummary,
+    productStockHistory,
+    todayProductLowStockCount,
+    isLoading,
+    isTodayProductLowStockCountLoading,
+    isProductStockHistoryLoading
+  } = useDashboard(
     dateRange?.from ? formatDateToDBString(dateRange.from) : undefined,
     dateRange?.to ? formatDateToDBString(dateRange.to) : undefined
   );
@@ -149,153 +167,301 @@ export default function DashboardPage() {
     }, {} as Record<string, { data: (DailyMetric & { cumulative: number })[], total: number, cumulativeTotal: number }>);
   }, [getMetricData]);
 
+  // Get unique product names for filter
+  const productNames = useMemo(() => {
+    const map = new Map<string, string>();
+
+    productStockHistory.forEach(item => {
+      if (!map.has(item.productId)) {
+        map.set(item.productId, item.productName);
+      }
+    });
+
+    const list = Array.from(map.entries()).map(([id, name]) => ({
+      value: id,
+      label: name,
+    }));
+
+    return [{ value: "all", label: "All" }, ...list.sort((a, b) => a.label.localeCompare(b.label))];
+  }, [productStockHistory]);
+
+
+
+  // Filter product stock history by selected product
+  const filteredProductStockHistory = useMemo(() => {
+    if (selectedProduct === "all") return productStockHistory;
+    return productStockHistory.filter(item => item.productId === selectedProduct);
+  }, [productStockHistory, selectedProduct]);
+
+
+  console.log({ productNames })
+  console.log({ selectedProduct })
+  console.log({ productStockHistory })
+
+
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
-      {/* Today's Summary Section */}
-      <h2 className="text-xl font-semibold text-center">{`Today's Summary`}</h2>
-      <div className="flex flex-col md:flex-row justify-around gap-4">
-        {metrics.map((metric) => (
-          <Card key={`today-${metric.key}`} className={`p-4 min-w-[200px] ${metric.className}`}>
-            <CardHeader className="pb-2">
-              <h3 className="text-sm font-medium">{metric.label}:</h3>
-            </CardHeader>
-            <CardBody className="pt-0">
-              {isTodayLoading ? (
-                <Skeleton className="h-8 min-w-[200px] rounded-md" />
-              ) : (
-                <p className="text-xl font-bold">
-                  {metric.key === "totalProducts"
-                    ? getTodayTotal(metric.key)
-                    : formatCurrency(getTodayTotal(metric.key))
-                  }
-                </p>
-              )}
-            </CardBody>
-          </Card>
-        ))}
-      </div>
-
-      {/* Date Filter for Historical Data */}
-      <div className="flex items-center justify-center gap-6">
-        <h2 className="text-xl font-semibold text-center flex-end">Daily Summary</h2>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="flex items-center gap-2">
-              <CalendarIcon className="h-4 w-4" />
-              {dateRange?.from ? formatDisplayDate(dateRange.from.toISOString()) : ""} -{" "}
-              {dateRange?.to ? formatDisplayDate(dateRange.to.toISOString()) : ""}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="end">
-            <Calendar
-              mode="range"
-              selected={dateRange}
-              onSelect={setDateRange}
-              numberOfMonths={2}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-
-      {/* Historical Data Tables */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {metrics.map((metric) => {
-          const { data, total } = metricData[metric.key] || { data: [], total: 0 };
-
-          return (
-            <Card key={metric.key} className={`p-4`}>
-              <CardHeader className="pb-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-semibold">{metric.label}:</h3>
-                  <span className="mx-1" />
-                  {isLoading ? (
-                    <Skeleton className="h-6 min-w-32 rounded-md" />
-                  ) : (
-                    <div className="text-xl font-medium text-right text-muted-foreground">
-                      {metric.key === "totalProducts"
-                        ? total
-                        : formatCurrency(total)
-                      }
-                    </div>
-                  )}
-                </div>
+      {/* Today's Summary Card */}
+      <Card>
+        <CardHeader className="pb-4 flex justify-center items-center text-center">
+          <h2 className="text-xl font-semibold">{`Today's Summary`}</h2>
+        </CardHeader>
+        <CardBody>
+          <div className="flex flex-col md:flex-row justify-around gap-4">
+            {/* Add Today's Product Stock Changes */}
+            <Card className="p-4 min-w-[200px] bg-blue-500 text-white">
+              <CardHeader className="pb-2">
+                <h3 className="text-sm font-medium">Low Stock Product:</h3>
               </CardHeader>
-              <CardBody>
-                <Table
-                  color="success"
-                  isVirtualized
-                  aria-label={`${metric.label} table`}
-                  isHeaderSticky
-                  classNames={{
-                    base: `max-h-[520px] overflow-y-scroll `,
-                    table: "min-h-[400px]",
-                  }}
-                  key={`table-${metric.key}`}
-                >
-                  <TableHeader>
-                    <TableColumn>Date</TableColumn>
-                    <TableColumn>Daily</TableColumn>
-                    <TableColumn>Cumulative</TableColumn>
-                  </TableHeader>
-                  <TableBody>
-                    {isLoading ? (
-                      // Show loading skeletons based on date range
-                      Array.from({ length: skeletonCount }).map((_, index) => (
-                        <TableRow key={`skeleton-${index}`}>
-                          <TableCell><Skeleton className="h-4 w-24 rounded-md" /></TableCell>
-                          <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
-                          <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
-                        </TableRow>
-                      ))
-                    ) : data.length > 0 ? (
-                      data.map((item) => (
-                        <TableRow key={item.date}>
-                          <TableCell>
-                            {formatDisplayDate(item.date)}
-                          </TableCell>
-                          <TableCell>
-                            {metric.key === "totalProducts"
-                              ? item.value
-                              : formatCurrency(item.value)
-                            }
-                          </TableCell>
-                          <TableCell>
-                            {metric.key === "totalProducts"
-                              ? item.cumulative
-                              : formatCurrency(item.cumulative)
-                            }
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={3} className="h-24 text-center">
-                          No data available for the selected period.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-
-                {/* Grand Totals Row */}
-                {!isLoading && data.length > 0 && (
-                  <div className="mt-4 p-2 bg-muted rounded-md">
-                    <div className="flex justify-between items-center font-semibold">
-                      <span>Grand Total:</span>
-                      <span>
-                        {metric.key === "totalProducts"
-                          ? total
-                          : formatCurrency(total)
-                        }
-                      </span>
-                    </div>
-                  </div>
+              <CardBody className="pt-0">
+                {isTodayProductLowStockCountLoading ? (
+                  <Skeleton className="h-8 min-w-[200px] rounded-md" />
+                ) : (
+                  <p className="text-xl font-bold">
+                    {Array.isArray(todayProductLowStockCount)
+                      ? ""
+                      : typeof todayProductLowStockCount === "object" && todayProductLowStockCount !== null
+                        ? todayProductLowStockCount.lowStockProductCount
+                        : todayProductLowStockCount}
+                  </p>
                 )}
               </CardBody>
             </Card>
-          );
-        })}
-      </div>
+
+            {metrics.map((metric) => (
+              <Card key={`today-${metric.key}`} className={`p-4 min-w-[200px] ${metric.className}`}>
+                <CardHeader className="pb-2">
+                  <h3 className="text-sm font-medium">{metric.label}:</h3>
+                </CardHeader>
+                <CardBody className="pt-0">
+                  {isTodayProductLowStockCountLoading ? (
+                    <Skeleton className="h-8 min-w-[200px] rounded-md" />
+                  ) : (
+                    <p className="text-xl font-bold">
+                      {formatCurrency(getTodayTotal(metric.key))}
+                    </p>
+                  )}
+                </CardBody>
+              </Card>
+            ))}
+          </div>
+        </CardBody>
+      </Card>
+
+      {/* Product Stock History Card */}
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <h2 className="text-xl font-semibold">Product Stock History</h2>
+            <div className="flex flex-col md:flex-row gap-4">
+              <Select
+                value={selectedProduct}
+                onValueChange={(value) => setSelectedProduct(value)}
+              >
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Select a product" />
+                </SelectTrigger>
+                <SelectContent>
+                  {productNames.map((product) => (
+                    <SelectItem key={product.value} value={product.value}>
+                      {product.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2 justify-center">
+                    <CalendarIcon className="h-4 w-4" />
+                    {dateRange?.from ? formatDisplayDate(dateRange.from.toISOString()) : ""} -{" "}
+                    {dateRange?.to ? formatDisplayDate(dateRange.to.toISOString()) : ""}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 flex justify-center">
+                  <Calendar
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+        </CardHeader>
+        <CardBody>
+          <Table
+            isVirtualized
+            aria-label="Product Stock History table"
+            isHeaderSticky
+            classNames={{
+              base: "max-h-[520px] overflow-y-scroll",
+              table: "min-h-[400px]",
+            }}
+          >
+            <TableHeader>
+              <TableColumn>Product Name</TableColumn>
+              <TableColumn>Date</TableColumn>
+              <TableColumn>Previous Stock</TableColumn>
+              <TableColumn>New Stock</TableColumn>
+              <TableColumn>Change Amount</TableColumn>
+              <TableColumn>Changed By</TableColumn>
+              <TableColumn>Reason</TableColumn>
+              <TableColumn>Note</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {isProductStockHistoryLoading ? (
+                Array.from({ length: 7 }).map((_, index) => (
+                  <TableRow key={`skeleton-${index}`}>
+                    <TableCell><Skeleton className="h-4 w-24 rounded-md" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-32 rounded-md" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-32 rounded-md" /></TableCell>
+                    <TableCell><Skeleton className="h-4 w-32 rounded-md" /></TableCell>
+                  </TableRow>
+                ))
+              ) : filteredProductStockHistory.length > 0 ? (
+                filteredProductStockHistory.map((item, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{item.productName}</TableCell>
+                    <TableCell className="flex flex-col">{formatDisplayDate(item.date)} <span className="text-primary">{fancyDate(item.date)}</span></TableCell>
+                    <TableCell>{item.previousStock}</TableCell>
+                    <TableCell>{item.newStock}</TableCell>
+                    <TableCell>{item.changeAmount}</TableCell>
+                    <TableCell>{item.changedBy}</TableCell>
+                    <TableCell>{stockReasonMap[item.changeReason]}</TableCell>
+                    <TableCell>{item.changeNote ?? "N/A"}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8} className="h-24 text-center">
+                    No stock history available for the selected period.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardBody>
+      </Card>
+
+      {/* Daily Summary Card */}
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex w-full flex-row items-center justify-center gap-6">
+            <h2 className="text-xl font-semibold text-center">Daily Summary</h2>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2 justify-center">
+                  <CalendarIcon className="h-4 w-4" />
+                  {dateRange?.from ? formatDisplayDate(dateRange.from.toISOString()) : ""} -{" "}
+                  {dateRange?.to ? formatDisplayDate(dateRange.to.toISOString()) : ""}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 flex justify-center">
+                <Calendar
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={setDateRange}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </CardHeader>
+        <CardBody>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {metrics.map((metric) => {
+              const { data, total } = metricData[metric.key] || { data: [], total: 0 };
+
+              return (
+                <Card key={metric.key} className={`p-4`}>
+                  <CardHeader className="pb-4">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-semibold">{metric.label}:</h3>
+                      <span className="mx-1" />
+                      {isLoading ? (
+                        <Skeleton className="h-6 min-w-32 rounded-md" />
+                      ) : (
+                        <div className="text-xl font-medium text-right text-muted-foreground">
+                          {formatCurrency(total)}
+                        </div>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardBody>
+                    <Table
+                      color="success"
+                      isVirtualized
+                      aria-label={`${metric.label} table`}
+                      isHeaderSticky
+                      classNames={{
+                        base: `max-h-[520px] overflow-y-scroll `,
+                        table: "min-h-[400px]",
+                      }}
+                      key={`table-${metric.key}`}
+                    >
+                      <TableHeader>
+                        <TableColumn>Date</TableColumn>
+                        <TableColumn>Daily</TableColumn>
+                        <TableColumn>Cumulative</TableColumn>
+                      </TableHeader>
+                      <TableBody>
+                        {isLoading ? (
+                          // Show loading skeletons based on date range
+                          Array.from({ length: skeletonCount }).map((_, index) => (
+                            <TableRow key={`skeleton-${index}`}>
+                              <TableCell><Skeleton className="h-4 w-24 rounded-md" /></TableCell>
+                              <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
+                              <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
+                            </TableRow>
+                          ))
+                        ) : data.length > 0 ? (
+                          data.map((item) => (
+                            <TableRow key={item.date}>
+                              <TableCell>
+                                {formatDisplayDate(item.date)}
+                              </TableCell>
+                              <TableCell>
+                                {formatCurrency(item.value)}
+                              </TableCell>
+                              <TableCell>
+                                {formatCurrency(item.cumulative)}
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={3} className="h-24 text-center">
+                              No data available for the selected period.
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+
+                    {/* Grand Totals Row */}
+                    {!isLoading && data.length > 0 && (
+                      <div className="mt-4 p-2 bg-muted rounded-md">
+                        <div className="flex justify-between items-center font-semibold">
+                          <span>Grand Total:</span>
+                          <span>
+                            {formatCurrency(total)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </CardBody>
+                </Card>
+              );
+            })}
+          </div>
+        </CardBody>
+      </Card>
     </div>
   );
 }

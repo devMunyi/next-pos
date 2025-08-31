@@ -33,3 +33,5 @@ export type OrderById = Outputs['orders']['getOrderById']
 
 export type DashboardSummaryResponse = Outputs['dashboard']['getSummary']
 export type DailyMetric = DashboardSummaryResponse['totalProducts'][number];
+export type ProductStockHistory = Outputs['dashboard']['getProductStockHistory'][number];
+export type TodayLowProductCountMetrics = Outputs['dashboard']['getTodayLowProductCountMetrics'];
