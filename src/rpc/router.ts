@@ -3,6 +3,7 @@ import "server-only";
 import { ai } from "@/zap/rpc/procedures/ai.rpc";
 import { auth } from "@/zap/rpc/procedures/auth.rpc";
 import { categories } from "@/zap/rpc/procedures/categories.rpc";
+import { dashboard } from "@/zap/rpc/procedures/dashboard.rpc";
 import { example } from "@/zap/rpc/procedures/example.rpc";
 import { feedbacks } from "@/zap/rpc/procedures/feedbacks.rpc";
 import { mails } from "@/zap/rpc/procedures/mails.rpc";
@@ -23,5 +24,6 @@ export const router = {
   categories,
   units,
   products,
-  orders
+  orders,
+  dashboard,
 };

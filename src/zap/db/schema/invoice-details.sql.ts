@@ -1,5 +1,5 @@
 import { generateId } from "better-auth";
-import { decimal,integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { decimal, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 import { user } from "./auth.sql";
 import { invoice } from "./invoices.sql";
@@ -17,8 +17,7 @@ export const invoiceDetails = pgTable("invoice_details", {
         .notNull()
         .references(() => product.id, { onDelete: "cascade" }),
     userId: text("user_id")
-        .notNull()
-        .references(() => user.id, { onDelete: "cascade" }),
+        .references(() => user.id, { onDelete: "set null" }),
     quantity: integer("quantity").notNull(), // Renamed from 'amount' to 'qty'
     perUnitPrice: decimal("per_unit_price", { precision: 20, scale: 2 }).notNull(), // New column
     totalPrice: decimal("total_price", { precision: 20, scale: 2 }).notNull(), // New column

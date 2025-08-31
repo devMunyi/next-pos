@@ -30,3 +30,6 @@ export type UserById = Outputs['users']['getUserById']
 export type Orders = Outputs['orders']['listOrders']
 export type Order = Orders['orders'][number];
 export type OrderById = Outputs['orders']['getOrderById']
+
+export type DashboardSummaryResponse = Outputs['dashboard']['getSummary']
+export type DailyMetric = DashboardSummaryResponse['totalProducts'][number];

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArchiveIcon, ChartLineIcon, Home, ListTreeIcon, ScaleIcon, ShoppingCartIcon, UsersIcon } from "lucide-react";
+import { ArchiveIcon, ChartLineIcon, CreditCardIcon, DollarSignIcon, Home, ListTreeIcon, ScaleIcon, ShoppingCartIcon, UsersIcon, WalletIcon } from "lucide-react";
 import Link from "next/link";
 import type * as React from "react";
 
@@ -49,6 +49,23 @@ const MAIN_NAV_ITEMS = [
     title: "Orders",
     url: "/app/orders",
     icon: ShoppingCartIcon,
+  },
+  {
+    title: "Credit",
+    url: "#",
+    icon: WalletIcon, // general credit section
+    items: [
+      {
+        title: "Repayments",
+        url: "/app/credit/repayments",
+        icon: DollarSignIcon, // repayment-related
+      },
+      {
+        title: "Limits",
+        url: "/app/credit/limits",
+        icon: CreditCardIcon, // represents credit facility
+      },
+    ],
   },
   {
     title: "Reports",
