@@ -206,11 +206,11 @@ export default function DashboardPage() {
             <Card key={metric.key} className="p-4">
               <CardHeader className="pb-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-semibold">{metric.label}</h3>
+                  <h3 className="text-lg font-semibold">{metric.label} </h3>
                   {isLoading ? (
                     <Skeleton className="h-6 min-w-32 rounded-md" />
                   ) : (
-                    <div className="text-xl font-medium text-right">
+                    <div className="text-xl font-medium text-right text-muted-foreground">
                       <div>
                         : {metric.key === "totalProducts"
                           ? total
