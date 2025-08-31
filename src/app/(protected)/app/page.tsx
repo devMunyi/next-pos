@@ -61,15 +61,16 @@ const getDaysInRange = (from?: Date, to?: Date): number => {
 interface MetricConfig {
   key: keyof DashboardSummaryResponse;
   label: string;
+  className: string;
 }
 
 const metrics: MetricConfig[] = [
-  { key: "totalProducts", label: "Total Products" },
-  { key: "cashSales", label: "Cash Sales" },
-  { key: "creditSales", label: "Credit Sales" },
-  { key: "creditRepayments", label: "Credit Repayments" },
-  { key: "expenses", label: "Expenses" },
-  { key: "profit", label: "Profit" },
+  { key: "totalProducts", label: "Total Products", className: "bg-blue-500 text-white" },
+  { key: "cashSales", label: "Cash Sales", className: "bg-green-500 text-white" },
+  { key: "creditSales", label: "Credit Sales", className: "bg-yellow-500 text-white" },
+  { key: "creditRepayments", label: "Credit Repayments", className: "bg-purple-500 text-white" },
+  { key: "expenses", label: "Expenses", className: "bg-red-500 text-white" },
+  { key: "profit", label: "Profit", className: "bg-teal-500 text-white" },
   // { key: "netProfit", label: "Net Profit" },
 ];
 
@@ -152,11 +153,11 @@ export default function DashboardPage() {
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
       {/* Today's Summary Section */}
       <h2 className="text-xl font-semibold text-center">{`Today's Summary`}</h2>
-      <div className="flex flex-col md:flex-row justify-around">
+      <div className="flex flex-col md:flex-row justify-around gap-4">
         {metrics.map((metric) => (
-          <Card key={`today-${metric.key}`} className="p-4 min-w-[200px]">
+          <Card key={`today-${metric.key}`} className={`p-4 min-w-[200px] ${metric.className}`}>
             <CardHeader className="pb-2">
-              <h3 className="text-sm font-medium text-muted-foreground">{metric.label}:</h3>
+              <h3 className="text-sm font-medium">{metric.label}:</h3>
             </CardHeader>
             <CardBody className="pt-0">
               {isTodayLoading ? (
