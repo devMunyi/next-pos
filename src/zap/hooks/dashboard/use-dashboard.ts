@@ -1,11 +1,11 @@
 "use client";
 import "client-only";
 
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import useSWR from "swr";
 
 import { client } from "@/zap/lib/orpc/client";
-import { getErrorMessage } from "@/zap/lib/util/common.client.util";
+// import { getErrorMessage } from "@/zap/lib/util/common.client.util";
 import { DashboardSummaryResponse } from "@/zap/types/infer-rpc";
 
 // Default empty response
@@ -30,7 +30,7 @@ export function useDashboard(from?: string, to?: string) {
                     to: toDate as string,
                 });
             } catch (e) {
-                toast.error(getErrorMessage(e, "Failed to fetch summary"));
+                // toast.error(getErrorMessage(e, "Failed to fetch summary"));
                 return emptyResponse;
             }
         }
@@ -43,7 +43,7 @@ export function useDashboard(from?: string, to?: string) {
             try {
                 return await client.dashboard.getTodaySummary();
             } catch (e) {
-                toast.error(getErrorMessage(e, "Failed to fetch today's summary"));
+                // toast.error(getErrorMessage(e, "Failed to fetch today's summary"));
                 return emptyResponse;
             }
         },
