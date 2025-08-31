@@ -203,7 +203,7 @@ export default function DashboardPage() {
           const { data, total } = metricData[metric.key] || { data: [], total: 0 };
 
           return (
-            <Card key={metric.key} className="p-4">
+            <Card key={metric.key} className={`p-4`}>
               <CardHeader className="pb-4">
                 <div className="flex justify-between items-center">
                   <h3 className="text-lg font-semibold">{metric.label} </h3>
@@ -222,7 +222,17 @@ export default function DashboardPage() {
                 </div>
               </CardHeader>
               <CardBody>
-                <Table aria-label={`${metric.label} table`}>
+                <Table
+                  color="success"
+                  isVirtualized
+                  aria-label={`${metric.label} table`}
+                  isHeaderSticky
+                  classNames={{
+                    base: `max-h-[520px] overflow-y-scroll `,
+                    table: "min-h-[400px]",
+                  }}
+                  key={`table-${metric.key}`}
+                >
                   <TableHeader>
                     <TableColumn>Date</TableColumn>
                     <TableColumn>Daily</TableColumn>
