@@ -36,6 +36,8 @@ export const checkoutFields: FormField<typeof createOrderSchemaPermissive>[] = [
 
 export const stockReasonOptions = [
     { value: "NEW_STOCK", label: "New Stock Received" },
+    { value: "CASH_SALE", label: "Cash Sale" },
+    { value: "CREDIT_SALE", label: "Credit Sale" },
     { value: "SALES_ADJUSTMENT", label: "Sales Adjustment" },
     { value: "CUSTOMER_RETURN", label: "Customer Return" },
     { value: "DAMAGED_EXPIRED", label: "Damaged / Expired Items" },

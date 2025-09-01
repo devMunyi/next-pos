@@ -68,6 +68,11 @@ const MAIN_NAV_ITEMS = [
     ],
   },
   {
+    title: "Expenses",
+    url: "/app/expenses",
+    icon: DollarSignIcon,
+  },
+  {
     title: "Reports",
     url: "/app/reports",
     icon: ChartLineIcon,

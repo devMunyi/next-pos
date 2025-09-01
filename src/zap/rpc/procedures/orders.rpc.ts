@@ -79,6 +79,7 @@ export const orders = {
 
           const cashBalance = input.saleType === "CASH" ? input.paidAmount - invoiceTotal : 0;
           const creditBalance = input.saleType === "CREDIT" ? input.paidAmount - invoiceTotal : 0;
+          const changeReason = input.saleType === "CASH" ? "CASH_SALE" : "CREDIT_SALE";
 
           const [newInvoice] = await tx
             .insert(invoice)
@@ -129,7 +130,7 @@ export const orders = {
                 new_stock: (item.product.availableStock - item.quantity).toString(),
                 change_amount: (-item.quantity).toString(),
                 changed_by: userId,
-                change_reason: `${input.saleType} SALE`,
+                change_reason: changeReason,
                 status: "ACTIVE",
               })
             ),
