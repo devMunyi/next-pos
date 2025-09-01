@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { stockReasonOptions } from "@/app/(protected)/app/products/fields";
+
 import { capitalizeString } from "../lib/util/common.client.util";
 
 // Base schema without refinement (used for extension)
@@ -77,22 +79,17 @@ export const productIds = z.object({
     ids: z.array(z.string()).min(1, "At least one ID is required")
 });
 
+
+const stockReasonValues = stockReasonOptions.map(o => o.value) as [
+    typeof stockReasonOptions[number]["value"],
+    ...string[]
+];
+
 // src/zap/schemas/product.schema.ts
 export const updateStockSchema = z.object({
     id: z.string(), // product ID
     availableStock: z.coerce.number().min(0, "Stock cannot be negative"),
-    reason: z.enum([
-        "NEW_STOCK",
-        "SALES_ADJUSTMENT",
-        "CUSTOMER_RETURN",
-        "DAMAGED_EXPIRED",
-        "LOST_STOLEN",
-        "STOCK_TRANSFER",
-        "INVENTORY_COUNT",
-        "PROMOTIONAL_USE",
-        "BUNDLE_ADJUSTMENT",
-        "OTHER",
-    ], {
+    reason: z.enum(stockReasonValues, {
         required_error: "Reason is required"
     }),
     otherReason: z.string().optional(), // only required if reason = OTHER

@@ -33,7 +33,6 @@ export const checkoutFields: FormField<typeof createOrderSchemaPermissive>[] = [
     },
 ];
 
-
 export const stockReasonOptions = [
     { value: "NEW_STOCK", label: "New Stock Received" },
     { value: "CASH_SALE", label: "Cash Sale" },
