@@ -300,7 +300,6 @@ export default function DashboardPage() {
               <TableColumn>Change Amount</TableColumn>
               <TableColumn>Changed By</TableColumn>
               <TableColumn>Reason</TableColumn>
-              <TableColumn>Note</TableColumn>
             </TableHeader>
             <TableBody>
               {isProductStockHistoryLoading ? (
@@ -311,7 +310,6 @@ export default function DashboardPage() {
                     <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-20 rounded-md" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-32 rounded-md" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-32 rounded-md" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-32 rounded-md" /></TableCell>
                   </TableRow>
@@ -329,13 +327,12 @@ export default function DashboardPage() {
                     <TableCell>{item.newStock}</TableCell>
                     <TableCell>{item.changeAmount}</TableCell>
                     <TableCell>{item.changedBy}</TableCell>
-                    <TableCell>{stockReasonMap[item.changeReason]}</TableCell>
-                    <TableCell>{item.changeNote ?? "N/A"}</TableCell>
+                    <TableCell>{item.changeReason === 'OTHER' ? `Other (${item.changeNote})` : stockReasonMap[item.changeReason]}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={8} className="h-24 text-center">
+                  <TableCell colSpan={7} className="h-24 text-center">
                     No stock history available for the selected period.
                   </TableCell>
                 </TableRow>
