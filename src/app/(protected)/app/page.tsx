@@ -230,7 +230,7 @@ export default function DashboardPage() {
                   {isTodayProductLowStockCountLoading ? (
                     <Skeleton className="h-8 min-w-[200px] rounded-md" />
                   ) : (
-                    <p className="text-xl font-bold">
+                    <p className="text-[18px] font-bold">
                       {formatCurrency(getTodayTotal(metric.key))}
                     </p>
                   )}
