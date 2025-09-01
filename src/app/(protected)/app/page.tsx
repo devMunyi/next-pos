@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 
 import { DateDisplay } from "@/components/date-display";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -378,11 +379,11 @@ export default function DashboardPage() {
                       <h3 className="text-lg font-semibold">{metric.label}:</h3>
                       <span className="mx-1" />
                       {isLoading ? (
-                        <Skeleton className="h-6 min-w-32 rounded-md" />
+                        <Skeleton className="h-8 min-w-32 rounded-md" />
                       ) : (
-                        <div className="text-xl font-medium text-right text-muted-foreground">
+                        <Badge className={`text-xl font-medium text-right text-muted-foreground ${metric.className}`}>
                           {formatCurrency(total)}
-                        </div>
+                        </Badge>
                       )}
                     </div>
                   </CardHeader>
@@ -440,12 +441,12 @@ export default function DashboardPage() {
                     {/* Grand Totals Row */}
                     {!isLoading && data.length > 0 && (
                       <div className="mt-4 p-2 bg-muted rounded-md">
-                        <div className="flex justify-between items-center font-semibold">
+                        <Badge className={`flex justify-between text-xl items-center font-semibold ${metric.className} w-full mt-4 p-2`}>
                           <span>Grand Total:</span>
                           <span>
                             {formatCurrency(total)}
                           </span>
-                        </div>
+                        </Badge>
                       </div>
                     )}
                   </CardBody>
