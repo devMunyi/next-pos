@@ -82,13 +82,14 @@ export function OrdersTable({
                             </TableCell>
                             <TableCell>
                                 {order.saleType === 'CREDIT' ? (
-                                    <Badge variant="destructive">
-                                        Credit
-                                        <br />
+                                    <>
+                                        <Badge variant="destructive">
+                                            Credit
+                                        </Badge>
                                         <span className="text-xs text-muted-foreground">
                                             Due: {order.creditDueDate ? <DateDisplay date={order.creditDueDate} /> : "N/A"}
                                         </span>
-                                    </Badge>
+                                    </>
                                 ) : (
                                     <Badge variant="default">Cash</Badge>
                                 )}

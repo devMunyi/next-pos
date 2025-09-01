@@ -319,7 +319,6 @@ export const stockHistory = pgTable("stock_history", {
   product_id: text("product_id")
     .notNull()
     .references(() => product.id, { onDelete: "cascade" }),
-
   previous_stock: decimal("previous_stock").notNull(),
   new_stock: decimal("new_stock").notNull(),
   change_amount: decimal("change_amount").notNull(),
@@ -334,29 +333,49 @@ export const stockHistory = pgTable("stock_history", {
 
 
 export const unit = pgTable("units", {
-    id: text('id')
-        .primaryKey()
-        .$defaultFn(() => generateId())
-        .notNull(),
-    name: text("name").notNull(),
-    acronym: text("acronym"),
-    description: text("description"),
-    createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }),
-    createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { mode: "string" }),
-    status: text("status", { enum: ["ACTIVE", "INACTIVE"] }).notNull().default("ACTIVE")
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => generateId())
+    .notNull(),
+  name: text("name").notNull(),
+  acronym: text("acronym"),
+  description: text("description"),
+  createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "string" }),
+  status: text("status", { enum: ["ACTIVE", "INACTIVE"] }).notNull().default("ACTIVE")
 });
 
 
 export const expenses = pgTable("expenses", {
-    id: text("id")
-        .primaryKey()
-        .$defaultFn(() => generateId())
-        .notNull(),
-    description: text("description").notNull(),
-    amount: decimal("amount", { precision: 20, scale: 2 }).notNull(),
-    expenseDate: timestamp("expense_date", { mode: "string" }).defaultNow().notNull(),
-    createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }),
-    createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { mode: "string" }),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => generateId())
+    .notNull(),
+  description: text("description").notNull(),
+  amount: decimal("amount", { precision: 20, scale: 2 }).notNull(),
+  expenseDate: timestamp("expense_date", { mode: "string" }).defaultNow().notNull(),
+  createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "string" }),
 });
+
+
+/*
+
+1) Disbursements Target
+2) Active Loans Target
+3) New Loans Target
+4) Expected Collections and PAR
+
+
+
+Disbursed Column
+Expected and Collected (P+I)
+Daily Collection
+Current PAR rename to Overdue
+Monthly allowed par 5% of expected total
+surplus = default - allowed PAR
+90%/collected - expected
+
+*/
