@@ -109,12 +109,12 @@ const getDailyMetricsHelper = async (
 
     const results = await db
         .select({
-            date: sql<string>`DATE(${dateColumn})`,
+            date: sql<string>`${dateColumn}`,
             value: valueExpr,
         })
         .from(table)
         .where(combinedCondition)
-        .groupBy(sql`DATE(${dateColumn})`) as ResultRow[];
+        .groupBy(sql`${dateColumn}`) as ResultRow[];
 
     // Fill in missing dates with 0 values
     return dates.map((date) => {
@@ -311,7 +311,6 @@ const getDailyProductStockHistory = async (
             cumulative: newCumulative,
         });
     }
-
     return result;
 };
 

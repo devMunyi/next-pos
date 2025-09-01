@@ -44,8 +44,8 @@ export function LoginForm({
   } = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
-      email: "samunyi90@gmail.com",
-      password: "k8C_s2@ko$(w!^u(pL2l8_goI@t0k2w5",
+      email: "samunyi91@gmail.com",
+      password: "g_k8C_s2@ko$(w!^u(pL2l8_goI@t0k2w5_g",
     },
     reValidateMode: "onChange",
   });

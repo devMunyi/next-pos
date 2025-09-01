@@ -16,6 +16,7 @@ import { CalendarIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 
+import { DateDisplay } from "@/components/date-display";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -31,7 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useDashboard } from "@/zap/hooks/dashboard/use-dashboard";
-import { fancyDate } from "@/zap/lib/util/date.util";
+import { formatCurrency, formatDisplayDate } from "@/zap/lib/util/common.client.util";
 import { DailyMetric, DashboardSummaryResponse } from "@/zap/types/infer-rpc";
 
 import { stockReasonMap } from "./products/fields";
@@ -110,18 +111,14 @@ export default function DashboardPage() {
     return getDaysInRange(dateRange?.from, dateRange?.to);
   }, [dateRange?.from, dateRange?.to]);
 
-  // Format currency values
-  const formatCurrency = useMemo(() => (value: number) => {
-    return `Ksh ${value.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
+  // // Format currency values
+  // const formatCurrency = useMemo(() => (value: number) => {
+  //   return `Ksh ${value.toLocaleString("en-US", {
+  //     minimumFractionDigits: 2,
+  //     maximumFractionDigits: 2,
+  //   })}`;
+  // }, []);
 
-  // Format date for display
-  const formatDisplayDate = useMemo(() => (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  }, []);
 
   // Helper function to safely access metric data
   const getMetricData = useMemo(() => (key: keyof DashboardSummaryResponse): DailyMetric[] => {
@@ -192,11 +189,6 @@ export default function DashboardPage() {
     if (selectedProduct === "all") return productStockHistory;
     return productStockHistory.filter(item => item.productId === selectedProduct);
   }, [productStockHistory, selectedProduct]);
-
-
-  console.log({ productNames })
-  console.log({ selectedProduct })
-  console.log({ productStockHistory })
 
 
   return (
@@ -328,7 +320,11 @@ export default function DashboardPage() {
                 filteredProductStockHistory.map((item, index) => (
                   <TableRow key={index}>
                     <TableCell>{item.productName}</TableCell>
-                    <TableCell className="flex flex-col">{formatDisplayDate(item.date)} <span className="text-primary">{fancyDate(item.date)}</span></TableCell>
+                    <TableCell>
+                      <DateDisplay
+                        date={item.date}
+                      />
+                    </TableCell>
                     <TableCell>{item.previousStock}</TableCell>
                     <TableCell>{item.newStock}</TableCell>
                     <TableCell>{item.changeAmount}</TableCell>
@@ -424,7 +420,7 @@ export default function DashboardPage() {
                           data.map((item) => (
                             <TableRow key={item.date}>
                               <TableCell>
-                                {formatDisplayDate(item.date)}
+                                <DateDisplay date={item.date} showTime={false} />
                               </TableCell>
                               <TableCell>
                                 {formatCurrency(item.value)}

@@ -5,6 +5,7 @@ import { PrinterIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
 import { ActionButton } from '@/components/actionButton';
+import { DateDisplay } from '@/components/date-display';
 import { Badge } from '@/components/ui/badge';
 import {
     Table,
@@ -14,7 +15,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { fancyDate } from '@/zap/lib/util/date.util';
 import { Order } from '@/zap/types/infer-rpc';
 
 export function OrdersTable({
@@ -78,9 +78,7 @@ export function OrdersTable({
                                 }).format(Number(order.saleAmount))}
                             </TableCell>
                             <TableCell>
-                                {new Date(order.createdAt).toLocaleDateString()}
-                                <br />
-                                <Badge color='primary' className='text-green-500'>{fancyDate(order.createdAt)}</Badge>
+                                <DateDisplay date={order.createdAt} />
                             </TableCell>
                             <TableCell>
                                 {order.saleType === 'CREDIT' ? (
@@ -88,7 +86,7 @@ export function OrdersTable({
                                         Credit
                                         <br />
                                         <span className="text-xs text-muted-foreground">
-                                            Due: {order.creditDueDate ? new Date(order.creditDueDate).toLocaleDateString() : "N/A"}
+                                            Due: {order.creditDueDate ? <DateDisplay date={order.creditDueDate} /> : "N/A"}
                                         </span>
                                     </Badge>
                                 ) : (

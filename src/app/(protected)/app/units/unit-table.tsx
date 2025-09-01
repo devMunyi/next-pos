@@ -5,6 +5,7 @@ import { PencilIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
 import { ActionButton } from '@/components/actionButton';
+import { DateDisplay } from '@/components/date-display';
 import { Badge } from '@/components/ui/badge';
 import {
     Table,
@@ -74,7 +75,7 @@ export function UnitTable({
                             <TableCell>{unit.acronym}</TableCell>
                             {/* <TableCell>{unit.description}</TableCell> */}
                             <TableCell>
-                                {new Date(unit.createdAt).toLocaleDateString()}
+                                <DateDisplay date={unit.createdAt} />
                             </TableCell>
                             <TableCell>
                                 <Badge

@@ -5,6 +5,7 @@ import { PencilIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
 import { ActionButton } from '@/components/actionButton';
+import { DateDisplay } from '@/components/date-display';
 import {
     Table,
     TableBody,
@@ -71,7 +72,7 @@ export function CategoryTable({
                             <TableCell>{category.name}</TableCell>
                             <TableCell>{category.description}</TableCell>
                             <TableCell>
-                                {new Date(category.createdAt).toLocaleDateString()}
+                                <DateDisplay date={category.createdAt} />
                             </TableCell>
                             <TableCell>
                                 <Badge

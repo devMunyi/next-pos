@@ -1,10 +1,11 @@
 // src/app/(protected)/app/units/unit-table.tsx
 "use client";
-import { Badge, Skeleton } from '@heroui/react';
+import { Skeleton } from '@heroui/react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import React from 'react';
 
 import { ActionButton } from '@/components/actionButton';
+import { DateDisplay } from '@/components/date-display';
 import {
     Table,
     TableBody,
@@ -14,7 +15,6 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { capitalizeString } from '@/zap/lib/util/common.client.util';
-import { fancyDate } from '@/zap/lib/util/date.util';
 import { User } from '@/zap/types/infer-rpc';
 
 export function UserTable({
@@ -78,9 +78,7 @@ export function UserTable({
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{capitalizeString(user.role)}</TableCell>
                             <TableCell>
-                                {new Date(user.createdAt).toLocaleDateString()}
-                                <br />
-                                <Badge color='primary' className='text-green-500'>{fancyDate(user.createdAt)}</Badge>
+                                <DateDisplay date={user.createdAt} showTime={true} />
                             </TableCell>
                             {/* <TableCell>
                                 <Badge
