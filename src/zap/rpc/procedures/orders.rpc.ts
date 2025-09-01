@@ -3,7 +3,7 @@ import "server-only";
 import { and, asc, desc, eq, ilike, or, SQL, sql } from "drizzle-orm";
 import { z } from "zod";
 
-import { invoice, invoiceDetails, product, user } from "@/db/schema";
+import { invoice, invoiceDetails, product, stockHistory, user } from "@/db/schema";
 import { authMiddleware, base } from "@/rpc/middlewares";
 import { createOrderSchema, listOrdersSchema } from "@/zap/schemas/orders.schema";
 
@@ -99,6 +99,7 @@ export const orders = {
 
           // 5. Create invoice details and update product stock
           await Promise.all([
+            // Insert invoice details for each item
             ...itemsWithDetails.map(item =>
               tx.insert(invoiceDetails).values({
                 invoiceId: newInvoice.id,
@@ -111,6 +112,7 @@ export const orders = {
                 createdBy: userId,
               })
             ),
+            // Update product stock for each item
             ...input.items.map(item =>
               tx.update(product)
                 .set({
@@ -118,7 +120,19 @@ export const orders = {
                   updatedAt: new Date().toISOString(),
                 })
                 .where(eq(product.id, item.productId))
-            )
+            ),
+            // Store stock history for each product
+            ...itemsWithDetails.map(item =>
+              tx.insert(stockHistory).values({
+                product_id: item.productId,
+                previous_stock: item.product.availableStock.toString(),
+                new_stock: (item.product.availableStock - item.quantity).toString(),
+                change_amount: (-item.quantity).toString(),
+                changed_by: userId,
+                change_reason: `${input.saleType} SALE`,
+                status: "ACTIVE",
+              })
+            ),
           ]);
 
           return {

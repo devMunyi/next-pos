@@ -33,7 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useDashboard } from "@/zap/hooks/dashboard/use-dashboard";
-import { formatCurrency, formatDisplayDate } from "@/zap/lib/util/common.client.util";
+import { capitalizeString, formatCurrency, formatDisplayDate } from "@/zap/lib/util/common.client.util";
 import { DailyMetric, DashboardSummaryResponse } from "@/zap/types/infer-rpc";
 
 import { stockReasonMap } from "./products/fields";
@@ -328,7 +328,7 @@ export default function DashboardPage() {
                     <TableCell>{item.newStock}</TableCell>
                     <TableCell>{item.changeAmount}</TableCell>
                     <TableCell>{item.changedBy}</TableCell>
-                    <TableCell>{item.changeReason === 'OTHER' ? `Other (${item.changeNote})` : stockReasonMap[item.changeReason]}</TableCell>
+                    <TableCell>{capitalizeString(item.changeReason === 'OTHER' ? `Other (${item.changeNote})` : stockReasonMap[item.changeReason])}</TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -441,7 +441,7 @@ export default function DashboardPage() {
                     {/* Grand Totals Row */}
                     {!isLoading && data.length > 0 && (
                       <div className="mt-4 p-2 bg-muted rounded-md">
-                        <Badge className={`flex justify-between text-xl items-center font-semibold ${metric.className} w-full mt-4 p-2`}>
+                        <Badge className={`flex justify-between text-xl items-center font-semibold ${metric.className} w-full p-2`}>
                           <span>Grand Total:</span>
                           <span>
                             {formatCurrency(total)}
