@@ -34,7 +34,7 @@ export default function Providers({
     <NuqsAdapter>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
+        defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
       >

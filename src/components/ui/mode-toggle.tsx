@@ -13,12 +13,12 @@ import {
 
 interface ModeToggleProps {
   variant?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link";
+  | "default"
+  | "destructive"
+  | "outline"
+  | "secondary"
+  | "ghost"
+  | "link";
 }
 
 export function ModeToggle({ variant = "default" }: ModeToggleProps) {

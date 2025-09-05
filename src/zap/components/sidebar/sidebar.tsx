@@ -52,7 +52,7 @@ const MAIN_NAV_ITEMS = [
   },
   {
     title: "Credit",
-    url: "#",
+    url: "/app/credit",
     icon: WalletIcon, // general credit section
     items: [
       {
@@ -109,7 +109,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar> & {
       <SidebarContent>
         <SidebarMainSection
           items={MAIN_NAV_ITEMS}
-          onLinkClick={onLinkClick}
+          accordion={true}
         // currentPath={pathname}
         />
         <SidebarSecondarySection className="mt-auto" />
