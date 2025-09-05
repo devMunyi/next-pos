@@ -39,7 +39,7 @@ export default function Providers({
         disableTransitionOnChange
       >
         <ProgressProvider
-          color="#efb100"
+          color="oklch(0.723 0.219 149.579)"
           options={{ showSpinner: false }}
           height="3px"
           shallowRouting
