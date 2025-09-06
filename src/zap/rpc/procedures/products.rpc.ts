@@ -6,6 +6,7 @@ import { and, asc, desc, eq, ilike, inArray, sql } from "drizzle-orm";
 import { category, product, ProductInsert, stockHistory, unit } from "@/db/schema";
 import { authMiddleware, base, noAuthMiddleware } from "@/rpc/middlewares";
 import { storeChangeLog } from "@/zap/lib/util/common.server.util";
+import { getStringDate } from "@/zap/lib/util/date.util";
 import {
     createProductSchema,
     deleteProductSchema,
@@ -15,7 +16,6 @@ import {
     updateProductSchema,
     updateStockSchema
 } from "@/zap/schemas/product.schema";
-import { getStringDate } from "@/zap/lib/util/date.util";
 
 export const products = {
     createProduct: base

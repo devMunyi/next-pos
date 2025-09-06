@@ -5,6 +5,7 @@ import { and, desc, eq, ilike, sql } from "drizzle-orm";
 
 import { category } from "@/db/schema";
 import { authMiddleware, base, noAuthMiddleware } from "@/rpc/middlewares";
+import { getStringDate } from "@/zap/lib/util/date.util";
 import {
     createCategorySchema,
     deleteCategorySchema,
@@ -12,7 +13,6 @@ import {
     readCategorySchema,
     updateCategorySchema,
 } from "@/zap/schemas/category.schema";
-import { getStringDate } from "@/zap/lib/util/date.util";
 
 export const categories = {
     addCategory: base

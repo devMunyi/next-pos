@@ -8,9 +8,9 @@ import { account, user } from "@/db/schema";
 import { authMiddleware, base } from "@/rpc/middlewares";
 import { getUserIdFromMailQuery } from "@/zap/db/queries/emails.query";
 import { auth } from "@/zap/lib/auth/server";
+import { getStringDate } from "@/zap/lib/util/date.util";
 import { updateUserSchema } from "@/zap/schemas/auth.schema";
 import { listUsersSchema } from "@/zap/schemas/users.schema";
-import { getStringDate } from "@/zap/lib/util/date.util";
 
 export const users = {
   listUsers: base
