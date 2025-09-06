@@ -41,14 +41,14 @@ export function useUser() {
                 });
 
                 if (result instanceof Error || !result) {
-                    toast.error("Failed to fetch users");
+                    // toast.error("Failed to fetch users");
                     return { users: [], total: 0 };
                 }
 
                 return { users: result.data, total: result.data.total };
             } catch (error) {
                 console.error("Error fetching users:", error);
-                toast.error("Failed to fetch users");
+                // toast.error("Failed to fetch users");
                 return { users: [], total: 0 };
             }
         }

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { DEFAULT_PAGE_SIZE } from "../lib/util/constants";
+
 
 
 export const createCategoryFormSchema = z.object({
@@ -38,7 +40,7 @@ export const deleteCategorySchema = z.object({
 // List/Filter Categories Schema (for queries)
 export const listCategoriesSchema = z.object({
     page: z.number().int().positive().default(1),
-    pageSize: z.number().int().positive().max(100).default(10),
+    pageSize: z.number().int().positive().max(100).default(DEFAULT_PAGE_SIZE),
     search: z.string().trim().optional(),
     status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
     sortBy: z.enum(["name", "createdAt"]).default("createdAt"),

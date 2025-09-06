@@ -157,7 +157,7 @@ export default function UsersPage() {
   }, [setSearchTerm, setPage]);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="">
       <UserToolbar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}

@@ -253,7 +253,7 @@ export default function ProductPage() {
 
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="">
       <ProductToolbar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}

@@ -91,7 +91,7 @@ export const editUserFormFields: FormField<typeof updateUserSchema>[] = [
 
 
 export const PAGE_SIZE_OPTIONS = [
-  { key: "5", label: "5" },
+  // { key: "5", label: "5" },
   { key: "10", label: "10" },
   { key: "20", label: "20" },
   { key: "50", label: "50" },

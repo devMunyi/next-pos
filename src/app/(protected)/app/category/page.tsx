@@ -137,7 +137,7 @@ export default function CategoryPage() {
   }, [searchTerm, pagination.page, pagination.pageSize, refreshCategories]);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="">
       <CategoryToolbar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}

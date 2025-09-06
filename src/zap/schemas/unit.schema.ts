@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { DEFAULT_PAGE_SIZE } from "../lib/util/constants";
+
 // capitalize first letter of name, and uppercase the Acronym
 export const createUnitSchema = z.object({
     name: z.string().trim().min(1, "Name is required").max(100).transform((val) => {
@@ -34,7 +36,7 @@ export const deleteUnitSchema = z.object({
 // List/Filter Units Schema (for queries)
 export const listUnitsSchema = z.object({
     page: z.number().int().positive().default(1),
-    pageSize: z.number().int().positive().max(100).default(10),
+    pageSize: z.number().int().positive().max(100).default(DEFAULT_PAGE_SIZE),
     search: z.string().trim().optional(),
     status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
     sortBy: z.enum(["name", "createdAt", "updatedAt"]).default("createdAt"),

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { stockReasonOptions } from "@/app/(protected)/app/products/fields";
 
 import { capitalizeString } from "../lib/util/common.client.util";
+import { DEFAULT_PAGE_SIZE } from "../lib/util/constants";
 
 // Base schema without refinement (used for extension)
 const baseProductSchema = z.object({
@@ -63,7 +64,7 @@ export const deleteProductSchema = z.object({
 // List/Filter Products Schema
 export const listProductsSchema = z.object({
     page: z.number().int().positive().default(1),
-    pageSize: z.number().int().positive().max(100).default(10),
+    pageSize: z.number().int().positive().max(100).default(DEFAULT_PAGE_SIZE),
     search: z.string().trim().optional(),
     status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
     categoryId: z.string().optional(),

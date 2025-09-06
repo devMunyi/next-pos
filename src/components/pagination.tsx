@@ -1,23 +1,29 @@
 "use client";
+
 import {
     Pagination as HeroPagination,
-    Select,
-    SelectItem,
-    Skeleton
+    Skeleton,
 } from "@heroui/react";
 import { useCallback } from "react";
 
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"; // shadcn/ui select
 import { PAGE_SIZE_OPTIONS } from "@/zap/lib/util/constants";
 
 type PaginationProps = {
     page: number;
     pageSize: number;
-    totalCount?: number; // Make optional for loading state
+    totalCount?: number;
     onPageChange: (page: number) => void;
     onPageSizeChange: (size: number) => void;
     className?: string;
-    isLoading?: boolean; // Add loading state prop
-}
+    isLoading?: boolean;
+};
 
 export function Pagination({
     page,
@@ -30,11 +36,14 @@ export function Pagination({
 }: PaginationProps) {
     const pageCount = totalCount ? Math.ceil(totalCount / pageSize) : 0;
 
-    const handlePageSizeChange = useCallback((keys: Iterable<unknown>) => {
-        const newSize = Number(Array.from(keys)[0]);
-        onPageSizeChange(newSize || Number(PAGE_SIZE_OPTIONS[0].key));
-        onPageChange(1);
-    }, [onPageSizeChange, onPageChange]);
+    const handlePageSizeChange = useCallback(
+        (value: string) => {
+            const newSize = Number(value);
+            onPageSizeChange(newSize || Number(PAGE_SIZE_OPTIONS[0].key));
+            onPageChange(1);
+        },
+        [onPageSizeChange, onPageChange]
+    );
 
     if (isLoading) {
         return (
@@ -59,20 +68,21 @@ export function Pagination({
         <div className={`flex items-center justify-between py-4 ${className}`}>
             {/* Page Size Selector */}
             <div className="flex items-center gap-2">
-                <span className="text-sm text-default-500">Rows per page:</span>
+                <span className="text-sm text-muted-foreground">Rows per page:</span>
                 <Select
-                    size="sm"
-                    radius="sm"
-                    className="w-18"
-                    selectedKeys={[String(pageSize || PAGE_SIZE_OPTIONS[0].key)]}
-                    onSelectionChange={handlePageSizeChange}
-                    aria-label="Select page size" // Accessibility label
+                    onValueChange={handlePageSizeChange}
+                    defaultValue={String(pageSize || PAGE_SIZE_OPTIONS[0].key)}
                 >
-                    {PAGE_SIZE_OPTIONS.map((size) => (
-                        <SelectItem key={size.key}>
-                            {size.label}
-                        </SelectItem>
-                    ))}
+                    <SelectTrigger className="w-20 h-8">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {PAGE_SIZE_OPTIONS.map((size) => (
+                            <SelectItem key={size.key} value={String(size.key)}>
+                                {size.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
                 </Select>
             </div>
 

@@ -121,7 +121,7 @@ export default function UnitsPage() {
 
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="">
       <UnitToolbar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}

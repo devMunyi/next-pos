@@ -1,11 +1,12 @@
 import { z } from "zod";
 
 import { isPhoneValid, makePhoneValid } from "../lib/util/common.client.util";
+import { DEFAULT_PAGE_SIZE } from "../lib/util/constants";
 
 // List/Filter Orders Schema
 export const listOrdersSchema = z.object({
     page: z.number().int().positive().default(1),
-    pageSize: z.number().int().positive().max(100).default(10),
+    pageSize: z.number().int().positive().max(100).default(DEFAULT_PAGE_SIZE),
     search: z.string().trim().optional(),
     sortBy: z.enum(["createdAt"]).default("createdAt"),
     sortOrder: z.enum(["asc", "desc"]).default("desc"),

@@ -37,9 +37,9 @@ export function useCategory() {
                     pageSize,
                     search: search || undefined,
                 });
-            } catch (e) {
-                const message = getErrorMessage(e, "Failed to fetch categories");
-                toast.error(message);
+            } catch {
+                // const message = getErrorMessage(e, "Failed to fetch categories");
+                // toast.error(message);
                 return { categories: [], total: 0, page, pageSize, totalPages: 0 };
             }
         }

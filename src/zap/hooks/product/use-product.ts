@@ -38,14 +38,14 @@ export function useProduct() {
                 });
 
                 if (!result.success) {
-                    toast.error(result.message || "Failed to fetch products");
+                    // toast.error(result.message || "Failed to fetch products");
                     return { products: [], total: 0 };
                 }
 
                 return result.data;
             } catch (error) {
                 console.error("Error fetching products:", error);
-                toast.error("Failed to fetch products");
+                // toast.error("Failed to fetch products");
                 return { products: [], total: 0 };
             }
         }

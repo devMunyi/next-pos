@@ -35,7 +35,7 @@ export function useOrders() {
                 });
             } catch (error) {
                 console.error("Error fetching orders:", error);
-                toast.error("Failed to fetch orders");
+                // toast.error("Failed to fetch orders");
                 return { orders: [], total: 0 };
             }
         }
