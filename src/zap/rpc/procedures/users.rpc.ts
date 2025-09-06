@@ -10,6 +10,7 @@ import { getUserIdFromMailQuery } from "@/zap/db/queries/emails.query";
 import { auth } from "@/zap/lib/auth/server";
 import { updateUserSchema } from "@/zap/schemas/auth.schema";
 import { listUsersSchema } from "@/zap/schemas/users.schema";
+import { getStringDate } from "@/zap/lib/util/date.util";
 
 export const users = {
   listUsers: base
@@ -78,7 +79,7 @@ export const users = {
             name: input.name,
             email: input.email,
             role: input.role,
-            updatedAt: new Date().toISOString(),
+            updatedAt: getStringDate(),
           })
           .where(eq(user.id, String(input.id)));
 

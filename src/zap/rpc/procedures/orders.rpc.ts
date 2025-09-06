@@ -6,6 +6,7 @@ import { z } from "zod";
 import { invoice, invoiceDetails, product, stockHistory, user } from "@/db/schema";
 import { authMiddleware, base } from "@/rpc/middlewares";
 import { createOrderSchema, listOrdersSchema } from "@/zap/schemas/orders.schema";
+import { getStringDate } from "@/zap/lib/util/date.util";
 
 export const orders = {
   // Create order procedure
@@ -95,6 +96,7 @@ export const orders = {
               customerPhoneNumber: input.customerPhoneNumber,
               status: input.saleType === "CASH" ? "PAID" : "UNPAID",
               createdBy: userId,
+              createdAt: getStringDate()
             })
             .returning();
 
@@ -118,7 +120,7 @@ export const orders = {
               tx.update(product)
                 .set({
                   availableStock: sql`${product.availableStock} - ${item.quantity}`,
-                  updatedAt: new Date().toISOString(),
+                  updatedAt: getStringDate(),
                 })
                 .where(eq(product.id, item.productId))
             ),

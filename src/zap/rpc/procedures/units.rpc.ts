@@ -1,12 +1,13 @@
 // src/zap/rpc/procedures/unit.rpc.ts
 import "server-only";
 
-import { and,asc, desc, eq, ilike, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, sql } from "drizzle-orm";
 import { Effect } from "effect";
 
 import { unit } from "@/db/schema";
 import { authMiddleware, base, noAuthMiddleware } from "@/rpc/middlewares";
-import { createUnitSchema, deleteUnitSchema,listUnitsSchema, readUnitSchema, updateUnitSchema } from "@/zap/schemas/unit.schema";
+import { createUnitSchema, deleteUnitSchema, listUnitsSchema, readUnitSchema, updateUnitSchema } from "@/zap/schemas/unit.schema";
+import { getStringDate } from "@/zap/lib/util/date.util";
 
 
 export const units = {
@@ -26,7 +27,7 @@ export const units = {
                                 .insert(unit)
                                 .values({
                                     createdBy: userId,
-                                    createdAt: new Date().toISOString(),
+                                    createdAt: getStringDate(),
                                     ...input,
                                 })
                                 .execute(),
@@ -61,7 +62,7 @@ export const units = {
                                 .update(unit)
                                 .set({
                                     ...input,
-                                    updatedAt: new Date().toISOString(),
+                                    updatedAt: getStringDate(),
                                 })
                                 .where(eq(unit.id, input.id!))
                                 .execute(),
@@ -176,7 +177,7 @@ export const units = {
         .input(readUnitSchema)
         .handler(async ({ context: { db }, input }) => {
             const effect = Effect.gen(function* (_) {
-               // const userId = session.user.id;
+                // const userId = session.user.id;
 
                 const unitData = yield* _(
                     Effect.tryPromise({

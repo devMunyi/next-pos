@@ -15,6 +15,7 @@ import {
     updateProductSchema,
     updateStockSchema
 } from "@/zap/schemas/product.schema";
+import { getStringDate } from "@/zap/lib/util/date.util";
 
 export const products = {
     createProduct: base
@@ -26,7 +27,7 @@ export const products = {
 
                 const resp = await db.insert(product).values({
                     createdBy: userId,
-                    createdAt: new Date().toISOString(),
+                    createdAt: getStringDate(),
                     ...input,
                     purchasePrice: String(input.purchasePrice),
                     sellingPrice: String(input.sellingPrice),
@@ -42,6 +43,7 @@ export const products = {
                         changed_by: userId,
                         change_reason: "NEW_STOCK",
                         change_note: "Initial stock on product creation",
+                        change_date: getStringDate(),
                         status: "ACTIVE",
                     });
                 }
@@ -97,7 +99,7 @@ export const products = {
                     }
                 }
 
-                updateData.updatedAt = new Date().toISOString();
+                updateData.updatedAt = getStringDate();
 
                 //= Get data before update
                 const dataBeforeUpdate = await db
@@ -157,6 +159,7 @@ export const products = {
                         changed_by: userId,
                         change_reason: "NEW_STOCK",
                         change_note: "Initial stock on product creation",
+                        change_date: getStringDate(),
                         status: "ACTIVE",
                     });
 
@@ -350,7 +353,7 @@ export const products = {
                         .update(product)
                         .set({
                             availableStock: newStock,
-                            updatedAt: new Date().toISOString(),
+                            updatedAt: getStringDate(),
                         })
                         .where(and(eq(product.id, input.id), eq(product.createdBy, userId)));
 
@@ -363,6 +366,7 @@ export const products = {
                         changed_by: userId,
                         change_reason: input.reason,
                         change_note: input.otherReason ?? null,
+                        change_date: getStringDate(),
                         status: "ACTIVE",
                     });
 

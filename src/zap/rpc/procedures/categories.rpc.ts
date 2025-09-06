@@ -12,6 +12,7 @@ import {
     readCategorySchema,
     updateCategorySchema,
 } from "@/zap/schemas/category.schema";
+import { getStringDate } from "@/zap/lib/util/date.util";
 
 export const categories = {
     addCategory: base
@@ -28,7 +29,7 @@ export const categories = {
                         name: input.name,
                         description: input.description || "",
                         status: input.status,
-                        createdAt: new Date().toISOString(),
+                        createdAt: getStringDate(),
                     })
                     .execute();
 
