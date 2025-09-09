@@ -28,7 +28,7 @@ export function UserToolbar({
 
     return (
         <div className="flex flex-col space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center overflow-clip">
                 <h1 className="text-2xl font-bold">Users</h1>
                 <Button
                     color="primary"
@@ -40,7 +40,7 @@ export function UserToolbar({
                 </Button>
             </div>
 
-            <div className="flex items-center justify-between gap-4 mb-4">
+            <div className="flex items-center justify-between gap-4 mb-4 overflow-clip">
                 <Input
                     placeholder="Search by name..."
                     value={searchTerm}

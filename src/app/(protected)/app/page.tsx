@@ -346,7 +346,8 @@ export default function DashboardPage() {
       {/* Daily Summary Card */}
       <Card className="p-6">
         <CardHeader className="pb-4">
-          <div className="flex w-full flex-row items-center justify-center gap-6">
+
+          <div className="flex w-full flex-col md:flex-row items-center justify-center gap-6 overflow-clip">
             <h2 className="text-xl font-semibold text-center">Daily Summary</h2>
             <Popover>
               <PopoverTrigger asChild>
