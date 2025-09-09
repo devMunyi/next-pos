@@ -1,6 +1,7 @@
 // src/app/(protected)/app/category/page.tsx
 "use client";
 import {
+  Card,
   useDisclosure
 } from "@heroui/react";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -137,7 +138,7 @@ export default function CategoryPage() {
   }, [searchTerm, pagination.page, pagination.pageSize, refreshCategories]);
 
   return (
-    <div className="">
+    <Card className="p-6 mx-4">
       <CategoryToolbar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
@@ -187,6 +188,6 @@ export default function CategoryPage() {
           columns={{ base: 1, md: 2, lg: 2 }}
         />
       </AddEditModal>
-    </div>
+    </Card>
   );
 }

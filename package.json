@@ -25,7 +25,8 @@
     "start": "next start",
     "zap": "npx create-zap-app@latest",
     "db:seed": "bun run src/zap/db/seed/index.ts",
-    "db:resetx": "drizzle-kit push && bun run src/zap/db/seed/index.ts"
+    "db:resetx": "drizzle-kit push && bun run src/zap/db/seed/index.ts",
+    "check": "bun run next lint --fix ."
   },
   "lint-staged": {
     "*": [

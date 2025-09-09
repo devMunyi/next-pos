@@ -1,5 +1,5 @@
 "use client";
-import { useDisclosure } from "@heroui/react";
+import { Card, useDisclosure } from "@heroui/react";
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useCallback, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -62,8 +62,6 @@ export default function UsersPage() {
 
     },
   });
-
-  console.log({ currentUser });
 
   // Update editForm when currentUser changes
   useEffect(() => {
@@ -157,7 +155,7 @@ export default function UsersPage() {
   }, [setSearchTerm, setPage]);
 
   return (
-    <div className="">
+    <Card className="p-6 mx-4">
       <UserToolbar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
@@ -208,6 +206,6 @@ export default function UsersPage() {
           )
         }
       </AddEditModal>
-    </div>
+    </Card>
   );
 }

@@ -1,6 +1,7 @@
 // src/app/(protected)/app/units/page.tsx
 "use client";
 import {
+  Card,
   useDisclosure
 } from "@heroui/react";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -121,7 +122,7 @@ export default function UnitsPage() {
 
 
   return (
-    <div className="">
+    <Card className="p-6 mx-4">
       <UnitToolbar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
@@ -169,6 +170,6 @@ export default function UnitsPage() {
           fields={unitFormFields}
         />
       </AddEditModal>
-    </div>
+    </Card>
   );
 }

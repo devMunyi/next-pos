@@ -1,6 +1,7 @@
 // src/app/(protected)/app/products/page.tsx
 "use client";
 import {
+  Card,
   useDisclosure
 } from "@heroui/react";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -253,7 +254,7 @@ export default function ProductPage() {
 
 
   return (
-    <div className="">
+    <Card className="p-6 mx-4">
       <ProductToolbar
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
@@ -326,6 +327,6 @@ export default function ProductPage() {
           columns={{ base: 1, md: 2, lg: 2 }}
         />
       </AddEditModal>
-    </div>
+    </Card>
   );
 }

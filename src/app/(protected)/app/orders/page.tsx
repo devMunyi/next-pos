@@ -1,5 +1,6 @@
 // src/app/(protected)/app/products/page.tsx
 "use client";
+import { Card } from '@heroui/react';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useOrders } from '@/zap/hooks/orders/use-orders';
@@ -49,7 +50,7 @@ export default function OrdersPage() {
 
 
     return (
-        <div className="">
+        <Card className="p-6 mx-4">
             <OrdersToolbar
                 searchTerm={searchTerm}
                 onSearchChange={handleSearchChange}
@@ -84,6 +85,6 @@ export default function OrdersPage() {
                 onPageSizeChange={setPageSize}
                 isLoading={isLoading}
             />
-        </div>
+        </Card>
     );
 }

@@ -33,9 +33,10 @@ interface SidebarMainSectionProps {
     }[];
   }[];
   accordion?: boolean;
+  onLinkClick?: () => void;
 }
 
-export function SidebarMainSection({ items, accordion = true }: SidebarMainSectionProps) {
+export function SidebarMainSection({ items, accordion = true, onLinkClick }: SidebarMainSectionProps) {
   const pathname = usePathname();
 
   const [openItem, setOpenItem] = React.useState<string | null>(
@@ -108,7 +109,7 @@ export function SidebarMainSection({ items, accordion = true }: SidebarMainSecti
                                 : "text-muted-foreground"
                             }
                           >
-                            <Link href={subItem.url}>
+                            <Link href={subItem.url} onClick={onLinkClick}>
                               <span>{subItem.title}</span>
                             </Link>
                           </SidebarMenuSubButton>
@@ -126,6 +127,7 @@ export function SidebarMainSection({ items, accordion = true }: SidebarMainSecti
                   href={item.url}
                   onClick={() => {
                     if (accordion) setOpenItem(null);
+                    onLinkClick?.();
                   }}
                   className={pathname === item.url ? "bg-accent text-primary font-semibold rounded-md" : ""}
                 >

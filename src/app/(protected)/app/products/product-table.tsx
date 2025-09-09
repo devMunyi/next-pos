@@ -33,7 +33,7 @@ export function ProductTable({
     onProductStockEdit: (product: Product) => void; // Add this prop
 }) {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
             {isLoading ? (
                 // Card loading skeletons
                 Array.from({ length: rpp }).map((_, i) => (

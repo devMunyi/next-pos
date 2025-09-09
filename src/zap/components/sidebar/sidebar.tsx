@@ -12,6 +12,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { SidebarMainSection } from "@/zap/components/sidebar/sidebar-main-section";
 import { SidebarSecondarySection } from "@/zap/components/sidebar/sidebar-secondary-section";
@@ -84,6 +85,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar> & {
 }) {
   const { data } = authClient.useSession();
   const { onLinkClick, ...rest } = props;
+  const { setOpenMobile } = useSidebar();
 
   if (!data?.user) return null;
 
@@ -110,6 +112,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar> & {
         <SidebarMainSection
           items={MAIN_NAV_ITEMS}
           accordion={true}
+          onLinkClick={() => setOpenMobile(false)}
         // currentPath={pathname}
         />
         <SidebarSecondarySection className="mt-auto" />

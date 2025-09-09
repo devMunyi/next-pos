@@ -193,9 +193,9 @@ export default function DashboardPage() {
 
 
   return (
-    <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
+    <div className="flex flex-1 flex-col gap-6 mx-4">
       {/* Today's Summary Card */}
-      <Card>
+      <Card className="p-6">
         <CardHeader className="pb-4 flex justify-center items-center text-center">
           <h2 className="text-xl font-semibold">{`Today's Summary`}</h2>
         </CardHeader>
@@ -242,7 +242,7 @@ export default function DashboardPage() {
       </Card>
 
       {/* Product Stock History Card */}
-      <Card>
+      <Card className="p-6">
         <CardHeader className="pb-4">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h2 className="text-xl font-semibold">Product Stock History</h2>
@@ -344,7 +344,7 @@ export default function DashboardPage() {
       </Card>
 
       {/* Daily Summary Card */}
-      <Card>
+      <Card className="p-6">
         <CardHeader className="pb-4">
           <div className="flex w-full flex-row items-center justify-center gap-6">
             <h2 className="text-xl font-semibold text-center">Daily Summary</h2>
