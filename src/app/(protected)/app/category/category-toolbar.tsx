@@ -28,7 +28,7 @@ export function CategoryToolbar({
 
     return (
         <div className="flex flex-col space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center flex-wrap">
                 <h1 className="text-2xl font-bold">Categories</h1>
                 <Button
                     color="primary"
@@ -40,7 +40,7 @@ export function CategoryToolbar({
                 </Button>
             </div>
 
-            <div className="flex items-center justify-between gap-4 mb-4">
+            <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
 
                 <Input
                     placeholder="Search by name..."

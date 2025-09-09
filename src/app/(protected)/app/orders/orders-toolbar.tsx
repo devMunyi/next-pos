@@ -30,7 +30,7 @@ export function OrdersToolbar({
 
     return (
         <div className="flex flex-col space-y-4">
-            <div className="flex justify-between items-center overflow-clip">
+            <div className="flex justify-between items-center flex-wrap">
                 <h1 className="text-2xl font-bold">Orders</h1>
                 <Button
                     color="primary"
@@ -44,7 +44,7 @@ export function OrdersToolbar({
                 </Button>
             </div>
 
-            <div className="flex items-center justify-between gap-4 mb-4 overflow-clip">
+            <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
                 <Input
                     placeholder="Search by name..."
                     value={searchTerm}
