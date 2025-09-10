@@ -80,12 +80,12 @@ export const editUserFormFields: FormField<typeof updateUserSchema>[] = [
       { value: 'CASHIER', label: 'Cashier' },
     ]
   },
-  // {
-  //   name: 'password',
-  //   label: 'Password',
-  //   type: 'password',
-  //   // optional: true, // Password is optional for editing
-  // },
+  {
+    name: 'password',
+    label: 'Password',
+    type: 'password',
+    // optional: true, // Password is optional for editing
+  },
 ];
 
 

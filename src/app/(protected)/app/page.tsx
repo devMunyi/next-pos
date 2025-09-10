@@ -112,15 +112,6 @@ export default function DashboardPage() {
     return getDaysInRange(dateRange?.from, dateRange?.to);
   }, [dateRange?.from, dateRange?.to]);
 
-  // // Format currency values
-  // const formatCurrency = useMemo(() => (value: number) => {
-  //   return `Ksh ${value.toLocaleString("en-US", {
-  //     minimumFractionDigits: 2,
-  //     maximumFractionDigits: 2,
-  //   })}`;
-  // }, []);
-
-
   // Helper function to safely access metric data
   const getMetricData = useMemo(() => (key: keyof DashboardSummaryResponse): DailyMetric[] => {
     return summary[key] || [];
@@ -138,7 +129,7 @@ export default function DashboardPage() {
       const data = getMetricData(metric.key);
 
       // Sort data by date
-      const sortedData = [...data].sort((a, b) =>
+      const sortedData = [...data].sort((a: { date: string | number | Date; }, b: { date: string | number | Date; }) =>
         new Date(a.date).getTime() - new Date(b.date).getTime()
       );
 
@@ -244,7 +235,7 @@ export default function DashboardPage() {
       {/* Product Stock History Card */}
       <Card className="p-6">
         <CardHeader className="pb-4">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex justify-center items-center gap-4 flex-wrap w-full">
             <h2 className="text-xl font-semibold">Product Stock History</h2>
             <div className="flex flex-col md:flex-row gap-4">
               <Select
@@ -442,7 +433,7 @@ export default function DashboardPage() {
                     {/* Grand Totals Row */}
                     {!isLoading && data.length > 0 && (
                       <div className="mt-4 p-2 bg-muted rounded-md">
-                        <Badge className={`flex justify-between text-xl items-center font-semibold ${metric.className} w-full p-2`}>
+                        <Badge className={`flex justify-between text-xl items-center font-semibold ${metric.className} w-full p-2 flex-wrap`}>
                           <span>Grand Total:</span>
                           <span>
                             {formatCurrency(total)}

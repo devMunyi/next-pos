@@ -2,7 +2,7 @@
 import "server-only";
 
 import { asc, desc, eq, ilike, sql } from "drizzle-orm";
-import z from "zod/v4";
+import { z } from "zod";
 
 import { account, user } from "@/db/schema";
 import { authMiddleware, base } from "@/rpc/middlewares";
@@ -63,8 +63,6 @@ export const users = {
       try {
         const { id: userId, role } = session.user;
 
-        console.log({ input, userId, role });
-
         if (!userId) {
           return { success: false, message: "Session invalid. Please re-login." };
         }
@@ -73,7 +71,7 @@ export const users = {
           return { success: false, message: "You don't have permission to update user!" };
         }
 
-        const response = await db
+        await db
           .update(user)
           .set({
             name: input.name,
@@ -83,8 +81,6 @@ export const users = {
           })
           .where(eq(user.id, String(input.id)));
 
-        console.log({ response })
-
         if (input.password) {
           const ctx = await auth.$context;
           const hash = await ctx.password.hash(input.password);
@@ -92,21 +88,10 @@ export const users = {
           await db
             .update(account)
             .set({ password: hash })
-            .where(eq(account.userId, userId));
+            .where(eq(account.userId, String(input.id)));
         }
-
-        // // check if logged user is updating their own account, then invalidate session
-        // if (userId === input.id) {
-        //   // refresh session
-        //   // const newSession = await auth.api.revokeUserSessions({ body: { userId } });
-        //   // console.log({ newSession });
-        // }
-
         return { success: true, message: "User updated successfully" };
       } catch (e) {
-
-        console.log({ e });
-
         return {
           success: false,
           message: e instanceof Error ? e.message : "Failed to update user",
