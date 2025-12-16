@@ -16,6 +16,7 @@ export const checkoutFields: FormField<typeof createOrderSchemaPermissive>[] = [
         type: "select",
         options: saleTypeOptions,
     },
+
     {
         name: "customerPhoneNumber",
         label: "Customer Phone Number",
