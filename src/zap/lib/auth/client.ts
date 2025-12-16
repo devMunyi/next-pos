@@ -5,7 +5,7 @@ import {
   anonymousClient,
   inferAdditionalFields,
   organizationClient,
-  passkeyClient,
+  // passkeyClient,
   twoFactorClient,
   usernameClient,
 } from "better-auth/client/plugins";
@@ -21,7 +21,7 @@ export const authClient = createAuthClient({
     twoFactorClient(),
     usernameClient(),
     anonymousClient(),
-    passkeyClient(),
+    // passkeyClient(),
     adminClient(),
     organizationClient(),
     inferAdditionalFields<typeof auth>()
