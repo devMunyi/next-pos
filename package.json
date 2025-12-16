@@ -4,6 +4,7 @@
   "private": false,
   "description": "An AI-powered e-commerce platform that leverages advanced machine learning algorithms to provide personalized shopping experiences, intelligent product recommendations, and seamless customer interactions.",
   "author": "Samuel Munyi",
+  "packageManager": "pnpm@10.12.1",
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build",
