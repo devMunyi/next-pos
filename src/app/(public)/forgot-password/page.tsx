@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
 
     await Effect.tryPromise({
       try: () =>
-        authClient.forgetPassword({
+        authClient.requestPasswordReset({
           email,
           redirectTo: "/reset-password",
         }),
