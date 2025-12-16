@@ -10,7 +10,7 @@ import {
   twoFactor,
   username,
 } from "better-auth/plugins";
-import { passkey } from "better-auth/plugins/passkey";
+// import { passkey } from "better-auth/plugins/passkey";
 
 import { SETTINGS } from "@/data/settings";
 import { db } from "@/db";
@@ -90,7 +90,7 @@ export const auth = betterAuth({
       usernameValidator: (username) => username !== "admin",
     }),
     anonymous(),
-    passkey(),
+    // passkey(),
     admin(),
     organization(),
     haveIBeenPwned({
