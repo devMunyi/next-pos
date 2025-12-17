@@ -9,7 +9,7 @@ import type { Session } from "@/zap/lib/auth/client";
 
 const LOGIN_URL = ZAP_DEFAULT_SETTINGS.AUTH.LOGIN_URL;
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   try {
     const { pathname } = request.nextUrl;
 
